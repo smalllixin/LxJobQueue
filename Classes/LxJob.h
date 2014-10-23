@@ -18,10 +18,10 @@
 
 @interface LxJob : NSObject<NSCoding, LxJobProtocol>
 
-@property (nonatomic, readonly, copy) NSString *groupId;
 @property (nonatomic, readonly, assign) BOOL persist;
 @property (nonatomic, readonly, assign) BOOL requiresNetwork;
 @property (nonatomic, assign) NSInteger priority;
+@property (nonatomic, copy) NSString *groupId;
 
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist;
 @end

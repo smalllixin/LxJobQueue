@@ -35,6 +35,7 @@ static inline NSComparisonResult comparePriority(id left, id right) {
         return NSOrderedDescending;//>
     }
 }
+
 static inline void swapHeapItem(NSMutableArray *q, NSInteger left, NSInteger right) {
     id t = q[left];
     q[left] = q[right];

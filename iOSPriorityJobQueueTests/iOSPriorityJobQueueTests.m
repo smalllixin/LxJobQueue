@@ -57,6 +57,7 @@
 - (void)testEchoJob {
     TestEchoJob *job = [TestEchoJob new];
     [self.manager addJobInBackground:job priority:1];
+    
 }
 
 - (void)testPerformanceExample {

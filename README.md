@@ -3,4 +3,12 @@ iOSPriorityJobQueue
 
 iOS version PriorityJobQueue
 
-This job is just begining.
+This project not complete. hold on!
+
+
+##
+
+Role inside job manager
+
+JobManager: accept & persist job.
+Executor: Execute

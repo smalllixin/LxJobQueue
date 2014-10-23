@@ -10,7 +10,6 @@
 
 @interface LxJob()
 
-@property (nonatomic, copy) NSString *groupId;
 @property (nonatomic, assign) BOOL persist;
 @property (nonatomic, assign) BOOL requiresNetwork;
 @end
@@ -19,28 +18,28 @@
 
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist {
     if (self = [super init]) {
+        self.groupId = groupId;
         self.requiresNetwork = requiresNettwork;
         self.priority = 1;
         self.persist = persist;
-        self.groupId = groupId;
     }
     return self;
 }
 
 #pragma mark NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.groupId forKey:@"groupId"];
     [aCoder encodeInteger:self.priority forKey:@"priority"];
     [aCoder encodeBool:self.persist forKey:@"persist"];
     [aCoder encodeBool:self.requiresNetwork forKey:@"requiresNetwork"];
+    [aCoder encodeObject:self.groupId forKey:@"groupId"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
-        self.groupId = [aDecoder decodeObjectForKey:@"groupId"];
         self.priority = [aDecoder decodeIntegerForKey:@"priority"];
         self.persist = [aDecoder decodeBoolForKey:@"persist"];
         self.requiresNetwork = [aDecoder decodeBoolForKey:@"requiresNetwork"];
+        self.groupId = [aDecoder decodeObjectForKey:@"groupId"];
     }
     return self;
 }
