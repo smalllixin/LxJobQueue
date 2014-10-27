@@ -44,7 +44,7 @@ static inline void swapHeapItem(NSMutableArray *q, NSInteger left, NSInteger rig
 
 - (void)dumpQ {
     NSMutableString *str = [[NSMutableString alloc] init];
-    for (int i = 0; i < _q.count; i ++) {
+    for (int i = 0; i <= _heapItemCount; i ++) {
         [str appendFormat:@"%d:%@ ", i, self.q[i]];
     }
     NSLog(@"%@",str);
@@ -60,11 +60,11 @@ static inline void swapHeapItem(NSMutableArray *q, NSInteger left, NSInteger rig
     }
     self.heapItemCount ++;
     // Compare the added element with its parent; if they are in the correct order, stop.
-    [self adjustHeapForInsert:self.heapItemCount];
+    [self up:self.heapItemCount];
     
 }
 
-- (void)adjustHeapForInsert:(NSInteger)elementIdx {
+- (void)up:(NSInteger)elementIdx {
     if (elementIdx <= 1) {
         return;
     }
@@ -77,8 +77,23 @@ static inline void swapHeapItem(NSMutableArray *q, NSInteger left, NSInteger rig
         //swap
         _q[parentIdx] = eleObj;
         _q[elementIdx] = parentObj;
-        [self adjustHeapForInsert:parentIdx];
+        [self up:parentIdx];
     }
+}
+
+- (void)stableUp:(NSInteger)elementIdx {
+    id<LxPriorityObject> newItem = _q[elementIdx];
+    NSInteger childPos = elementIdx*2;
+    while (childPos <= _heapItemCount) {
+        NSInteger rightPos = childPos + 1;
+        if (rightPos <= _heapItemCount && comparePriority(_q[childPos], _q[rightPos]) != NSOrderedDescending) {
+            childPos = rightPos;
+        }
+        _q[elementIdx] = _q[childPos];
+        elementIdx = childPos;
+        childPos = childPos*2;
+    }
+    _q[elementIdx] = newItem;
 }
 
 //Compare the new root with its children; if they are in the correct order, stop.
@@ -87,21 +102,14 @@ static inline void swapHeapItem(NSMutableArray *q, NSInteger left, NSInteger rig
     NSInteger leftIdx = elementIdx*2;
     NSInteger rightIdx = elementIdx*2 + 1;
     
-    NSInteger compareIdx;
-    if (leftIdx < _heapItemCount && rightIdx <_heapItemCount) {
-        
-        //leftIdx >= rightIdx
-        if (comparePriority(_q[leftIdx], _q[rightIdx]) != NSOrderedAscending) {
-            compareIdx = leftIdx;
-        } else {
-            compareIdx = rightIdx;
-        }
-        
-    } else if (leftIdx < _heapItemCount) {//just left child exist
-        compareIdx = leftIdx;
-    } else {
-        //no children
+    if (leftIdx >= _heapItemCount || leftIdx <= 0) {
         return;
+    }
+    
+    NSInteger compareIdx = leftIdx;
+    
+    if (rightIdx <= _heapItemCount && comparePriority(_q[leftIdx], _q[rightIdx]) != NSOrderedDescending) {
+            compareIdx = rightIdx;
     }
     
     if (comparePriority(_q[elementIdx], _q[compareIdx]) == NSOrderedAscending) {
@@ -121,7 +129,8 @@ static inline void swapHeapItem(NSMutableArray *q, NSInteger left, NSInteger rig
         id rootEle = _q[1];
         _q[1] = lastEle;
         _heapItemCount --;
-        [self adjustHeapForDelete:1];
+        [self stableUp:1];
+//        [self adjustHeapForDelete:1];
         return rootEle;
     } else {
         return nil;
