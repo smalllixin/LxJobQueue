@@ -113,6 +113,12 @@
     XCTAssertEqual([self.manager jobCountInGroup:@"MEME"], 0);
 }
 
+- (void)testSaveJob {
+    TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"save me"];
+    job.jobId = [self.manager genJobId];
+    [self.manager db_insert_job:job];
+}
+
 #pragma mark Test Helper
 - (NSArray*)addSuccAsyncJobsWithCount:(NSInteger)jobCount name:(NSString*)name {
     NSMutableArray *a = [[NSMutableArray alloc] initWithCapacity:jobCount];

@@ -12,6 +12,7 @@
 		82B91FBA19FE482D004F4B05 /* TestJobTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FB919FE482D004F4B05 /* TestJobTracker.m */; };
 		82B91FC319FF7122004F4B05 /* JobExecutorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FC219FF7122004F4B05 /* JobExecutorTest.m */; };
 		82B91FC419FF845E004F4B05 /* LxJobExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FC019FF3658004F4B05 /* LxJobExecutor.m */; };
+		82B91FC619FF9DC3004F4B05 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 82B91FC519FF9DC3004F4B05 /* libsqlite3.dylib */; };
 		A30371AE19F89623007A875D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371AD19F89623007A875D /* main.m */; };
 		A30371B119F89623007A875D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371B019F89623007A875D /* AppDelegate.m */; };
 		A30371B419F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A30371B219F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld */; };
@@ -46,6 +47,7 @@
 		82B91FBF19FF3658004F4B05 /* LxJobExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxJobExecutor.h; sourceTree = "<group>"; };
 		82B91FC019FF3658004F4B05 /* LxJobExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxJobExecutor.m; sourceTree = "<group>"; };
 		82B91FC219FF7122004F4B05 /* JobExecutorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobExecutorTest.m; sourceTree = "<group>"; };
+		82B91FC519FF9DC3004F4B05 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		A30371A819F89623007A875D /* iOSPriorityJobQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSPriorityJobQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30371AC19F89623007A875D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A30371AD19F89623007A875D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82B91FC619FF9DC3004F4B05 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,6 +93,7 @@
 		A303719F19F89623007A875D = {
 			isa = PBXGroup;
 			children = (
+				82B91FC519FF9DC3004F4B05 /* libsqlite3.dylib */,
 				A30371D419F89643007A875D /* Classes */,
 				A30371AA19F89623007A875D /* iOSPriorityJobQueue */,
 				A30371C719F89624007A875D /* iOSPriorityJobQueueTests */,

@@ -20,7 +20,7 @@ typedef enum : NSUInteger {
 
 - (void)addJobToQueue:(LxJob*)job;
 
-- (void)cancelAllJobs;
+- (NSArray*)cancelAllJobs;
 - (void)waitAllJobFinished;
 
 - (NSInteger)pendingJobCount;

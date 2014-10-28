@@ -15,7 +15,6 @@ NSInteger const DefaultRetryCount = 20;
 
 @property (nonatomic, assign) BOOL persist;
 @property (nonatomic, assign) BOOL requiresNetwork;
-
 @property (nonatomic, strong) NSError *jobError;
 @end
 

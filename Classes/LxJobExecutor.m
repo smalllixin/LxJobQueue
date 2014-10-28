@@ -68,7 +68,6 @@
 - (void)touch {
     @synchronized(_lock) {
         if (_pendingJobs.count > 0 && _runningJobs.count < _maxConcurrentCount) {
-            //go
             LxJob *job = [_pendingJobs objectAtIndex:0];
             [_runningJobs addObject:job];
             [_pendingJobs removeObjectAtIndex:0];
@@ -92,17 +91,20 @@
     }
 }
 
-- (void)cancelAllJobs {
+- (NSArray*)cancelAllJobs {
     //running job cannot cancel
     //just cancel pending jobs
+    NSMutableArray *cancelledJobs = [NSMutableArray new];
     @synchronized(_lock) {
         for (LxJob *job in self.pendingJobs) {
             job.cancelled = YES;
             [job jobCancelled];
+            [cancelledJobs addObject:job];
         }
         
         [self.pendingJobs removeAllObjects];
     }
+    return cancelledJobs;
 }
 
 - (void)waitAllJobFinished {

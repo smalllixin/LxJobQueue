@@ -17,19 +17,21 @@
 
 - (id)initWithName:(NSString*)name;
 
-//addJob and run immediatly
 - (void)addJobInBackground:(LxJob*)job;
 
-//job will be executed one by one
 - (void)addQueueJob:(LxJob*)job toGroup:(NSString*)groupId;
 
 - (NSInteger)jobCountInGroup:(NSString*)groupId;
 
 - (void)cancelAllJobs;
+
 - (void)waitUtilAllJobFinished;
 
 - (NSInteger)jobCount;
 
-- (BOOL)isQueueDeallocInGroup:(NSString*)group;
+- (void)save;
+
+- (void)db_insert_job:(LxJob*)job;
+- (NSInteger)genJobId;
 
 @end
