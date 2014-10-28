@@ -11,11 +11,11 @@
 NSString *const DefaultJobGroupId = @"default";
 
 @interface LxJob()
+
 @property (nonatomic, assign) BOOL persist;
 @property (nonatomic, assign) BOOL requiresNetwork;
-@property (nonatomic, strong) NSError *jobError;
-@property (nonatomic, assign) BOOL m_jobRunned;
 
+@property (nonatomic, strong) NSError *jobError;
 @end
 
 @implementation LxJob
@@ -40,20 +40,28 @@ NSString *const DefaultJobGroupId = @"default";
 }
 
 - (void)p_main {
-    self.m_jobRunned = YES;
     int attemptCount = 0;
     while (true) {
-        NSError *err = [self jobRun];
-        if (err != nil) {
-            self.jobError = err;
-            if ([self jobShouldReRunWithError:err] && attemptCount < self.retryCount) {
-                attemptCount ++;
+        NSError *err;
+        @try {
+            err = [self jobRun];
+        }
+        @catch (NSException *exception) {
+            err = [NSError errorWithDomain:@"lxtap.com" code:-1 userInfo:@{@"exception":exception}];
+            NSAssert(err == nil, @"Hey guys you should see where this exception triggered");
+        }
+        @finally {
+            if (err != nil) {
+                self.jobError = err;
+                if ([self jobShouldReRunWithError:err] && attemptCount < self.retryCount) {
+                    attemptCount ++;
+                } else {
+                    [self cancelJob];
+                    return;
+                }
             } else {
-                [self cancelJob];
-                return;
+                break;
             }
-        } else {
-            break;
         }
     }
 }
@@ -78,6 +86,7 @@ NSString *const DefaultJobGroupId = @"default";
     [aCoder encodeBool:self.persist forKey:@"persist"];
     [aCoder encodeBool:self.requiresNetwork forKey:@"requiresNetwork"];
     [aCoder encodeObject:self.groupId forKey:@"groupId"];
+    [aCoder encodeInteger:self.retryCount forKey:@"retryCount"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -86,6 +95,7 @@ NSString *const DefaultJobGroupId = @"default";
         self.persist = [aDecoder decodeBoolForKey:@"persist"];
         self.requiresNetwork = [aDecoder decodeBoolForKey:@"requiresNetwork"];
         self.groupId = [aDecoder decodeObjectForKey:@"groupId"];
+        self.retryCount = [aDecoder decodeIntegerForKey:@"retryCount"];
     }
     return self;
 }

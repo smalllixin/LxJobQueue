@@ -12,10 +12,12 @@
 extern NSString *const DefaultJobGroupId;
 
 @protocol LxJobProtocol <NSObject>
+
 - (void)jobAdded;
 - (NSError*)jobRun;
 - (BOOL)jobShouldReRunWithError:(NSError*)error;
 - (void)jobCancelled;
+
 @end
 
 @class LxJobManager;
