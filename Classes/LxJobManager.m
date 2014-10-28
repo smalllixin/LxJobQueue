@@ -14,9 +14,7 @@
 
 @property (nonatomic, copy) NSString *name;
 
-@property (nonatomic, strong) NSMutableDictionary *jobGroup;// <NSString, NSOperationQueue>
-
-//@property (nonatomic, strong) NSMutableDictionary *runningJobGroup;
+@property (nonatomic, strong) NSMutableDictionary *jobGroup;// <NSString, LxJobExecutor>
 
 @property (nonatomic, strong) dispatch_queue_t syncQueue;
 

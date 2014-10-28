@@ -9,39 +9,13 @@
 #import "LxJob.h"
 
 NSString *const DefaultJobGroupId = @"default";
-//typedef enum : NSUInteger {
-//    JobStatusInit,
-//    JobStatusReady,
-//    JobStatusRunning,
-//    JobStatusFinished, //finish state
-//    JobStatusCancelled //finish state
-//} JobStatus;
-//
 
-@protocol LxJobOperationDelegate <NSObject>
-- (void)p_main;
-@end
-
-@interface LxJobOperation:NSOperation
-
-@property (nonatomic, weak) id<LxJobOperationDelegate> delegate;
-@end
-
-@implementation LxJobOperation
-
-- (void)main {
-    [self.delegate p_main];
-}
-
-@end
-
-@interface LxJob()<LxJobOperationDelegate>
+@interface LxJob()
 @property (nonatomic, assign) BOOL persist;
 @property (nonatomic, assign) BOOL requiresNetwork;
 @property (nonatomic, strong) NSError *jobError;
 @property (nonatomic, assign) BOOL m_jobRunned;
 
-@property (nonatomic, strong) LxJobOperation *operation;
 @end
 
 @implementation LxJob
@@ -57,16 +31,6 @@ NSString *const DefaultJobGroupId = @"default";
         self.requiresNetwork = requiresNettwork;
         self.persist = persist;
         self.retryCount = 20;
-        
-        self.operation = [LxJobOperation new];
-        self.operation.delegate = self;
-        
-        __weak typeof(self) wself = self;
-        [self.operation setCompletionBlock:^{
-            if (!wself.m_jobRunned) {
-                [wself cancelJob];
-            }
-        }];
     }
     return self;
 }
