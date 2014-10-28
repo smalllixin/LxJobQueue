@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		82B91FB419FE479E004F4B05 /* TestFailedJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FB319FE479E004F4B05 /* TestFailedJob.m */; };
+		82B91FB719FE47B0004F4B05 /* TestSuccJob.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FB619FE47B0004F4B05 /* TestSuccJob.m */; };
+		82B91FBA19FE482D004F4B05 /* TestJobTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FB919FE482D004F4B05 /* TestJobTracker.m */; };
+		82B91FC319FF7122004F4B05 /* JobExecutorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FC219FF7122004F4B05 /* JobExecutorTest.m */; };
+		82B91FC419FF845E004F4B05 /* LxJobExecutor.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B91FC019FF3658004F4B05 /* LxJobExecutor.m */; };
 		A30371AE19F89623007A875D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371AD19F89623007A875D /* main.m */; };
 		A30371B119F89623007A875D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371B019F89623007A875D /* AppDelegate.m */; };
 		A30371B419F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A30371B219F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld */; };
@@ -19,7 +24,6 @@
 		A30371DC19F89643007A875D /* LxJobManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371D819F89643007A875D /* LxJobManager.m */; };
 		A30371DD19F89643007A875D /* LxPriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371DA19F89643007A875D /* LxPriorityQueue.m */; };
 		A30371E119F896B2007A875D /* PriorityQueueTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371DE19F896B2007A875D /* PriorityQueueTest.m */; };
-		A30371E219F896B2007A875D /* TestEchoJob.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371E019F896B2007A875D /* TestEchoJob.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +37,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		82B91FB219FE479E004F4B05 /* TestFailedJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFailedJob.h; sourceTree = "<group>"; };
+		82B91FB319FE479E004F4B05 /* TestFailedJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestFailedJob.m; sourceTree = "<group>"; };
+		82B91FB519FE47B0004F4B05 /* TestSuccJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestSuccJob.h; sourceTree = "<group>"; };
+		82B91FB619FE47B0004F4B05 /* TestSuccJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestSuccJob.m; sourceTree = "<group>"; };
+		82B91FB819FE482D004F4B05 /* TestJobTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestJobTracker.h; sourceTree = "<group>"; };
+		82B91FB919FE482D004F4B05 /* TestJobTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestJobTracker.m; sourceTree = "<group>"; };
+		82B91FBF19FF3658004F4B05 /* LxJobExecutor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxJobExecutor.h; sourceTree = "<group>"; };
+		82B91FC019FF3658004F4B05 /* LxJobExecutor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxJobExecutor.m; sourceTree = "<group>"; };
+		82B91FC219FF7122004F4B05 /* JobExecutorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JobExecutorTest.m; sourceTree = "<group>"; };
 		A30371A819F89623007A875D /* iOSPriorityJobQueue.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSPriorityJobQueue.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30371AC19F89623007A875D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A30371AD19F89623007A875D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -54,8 +67,6 @@
 		A30371D919F89643007A875D /* LxPriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxPriorityQueue.h; sourceTree = "<group>"; };
 		A30371DA19F89643007A875D /* LxPriorityQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxPriorityQueue.m; sourceTree = "<group>"; };
 		A30371DE19F896B2007A875D /* PriorityQueueTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityQueueTest.m; sourceTree = "<group>"; };
-		A30371DF19F896B2007A875D /* TestEchoJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestEchoJob.h; sourceTree = "<group>"; };
-		A30371E019F896B2007A875D /* TestEchoJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestEchoJob.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,8 +136,13 @@
 			children = (
 				A30371DE19F896B2007A875D /* PriorityQueueTest.m */,
 				A30371CA19F89624007A875D /* iOSPriorityJobQueueTests.m */,
-				A30371DF19F896B2007A875D /* TestEchoJob.h */,
-				A30371E019F896B2007A875D /* TestEchoJob.m */,
+				82B91FC219FF7122004F4B05 /* JobExecutorTest.m */,
+				82B91FB519FE47B0004F4B05 /* TestSuccJob.h */,
+				82B91FB619FE47B0004F4B05 /* TestSuccJob.m */,
+				82B91FB219FE479E004F4B05 /* TestFailedJob.h */,
+				82B91FB319FE479E004F4B05 /* TestFailedJob.m */,
+				82B91FB819FE482D004F4B05 /* TestJobTracker.h */,
+				82B91FB919FE482D004F4B05 /* TestJobTracker.m */,
 				A30371C819F89624007A875D /* Supporting Files */,
 			);
 			path = iOSPriorityJobQueueTests;
@@ -147,6 +163,8 @@
 				A30371D619F89643007A875D /* LxJob.m */,
 				A30371D719F89643007A875D /* LxJobManager.h */,
 				A30371D819F89643007A875D /* LxJobManager.m */,
+				82B91FBF19FF3658004F4B05 /* LxJobExecutor.h */,
+				82B91FC019FF3658004F4B05 /* LxJobExecutor.m */,
 				A30371D919F89643007A875D /* LxPriorityQueue.h */,
 				A30371DA19F89643007A875D /* LxPriorityQueue.m */,
 			);
@@ -253,6 +271,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82B91FC419FF845E004F4B05 /* LxJobExecutor.m in Sources */,
 				A30371B119F89623007A875D /* AppDelegate.m in Sources */,
 				A30371DC19F89643007A875D /* LxJobManager.m in Sources */,
 				A30371DB19F89643007A875D /* LxJob.m in Sources */,
@@ -267,8 +286,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82B91FC319FF7122004F4B05 /* JobExecutorTest.m in Sources */,
+				82B91FB719FE47B0004F4B05 /* TestSuccJob.m in Sources */,
 				A30371CB19F89624007A875D /* iOSPriorityJobQueueTests.m in Sources */,
-				A30371E219F896B2007A875D /* TestEchoJob.m in Sources */,
+				82B91FBA19FE482D004F4B05 /* TestJobTracker.m in Sources */,
+				82B91FB419FE479E004F4B05 /* TestFailedJob.m in Sources */,
 				A30371E119F896B2007A875D /* PriorityQueueTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -384,6 +406,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = iOSPriorityJobQueue/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -394,6 +417,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = iOSPriorityJobQueue/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -452,6 +476,7 @@
 				A30371D019F89624007A875D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A30371D119F89624007A875D /* Build configuration list for PBXNativeTarget "iOSPriorityJobQueueTests" */ = {
 			isa = XCConfigurationList;
@@ -460,6 +485,7 @@
 				A30371D319F89624007A875D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

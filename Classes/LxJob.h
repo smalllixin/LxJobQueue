@@ -9,19 +9,33 @@
 #import <Foundation/Foundation.h>
 #import "LxPriorityQueue.h"
 
-@protocol LxJobProtocol <LxPriorityObject>
+extern NSString *const DefaultJobGroupId;
+
+@protocol LxJobProtocol <NSObject>
 - (void)jobAdded;
 - (NSError*)jobRun;
-- (BOOL)jobShouldReRun;
+- (BOOL)jobShouldReRunWithError:(NSError*)error;
 - (void)jobCancelled;
 @end
 
-@interface LxJob : NSObject<NSCoding, LxJobProtocol>
+@class LxJobManager;
+
+@interface LxJob : NSObject<LxJobProtocol,NSCoding>
 
 @property (nonatomic, readonly, assign) BOOL persist;
 @property (nonatomic, readonly, assign) BOOL requiresNetwork;
-@property (nonatomic, assign) NSInteger priority;
 @property (nonatomic, copy) NSString *groupId;
 
+@property (nonatomic, assign) NSInteger retryCount;
+@property (nonatomic, copy) NSString *name;
+
+@property (getter=isExecuting) BOOL executing;
+@property (getter=isFinished) BOOL finished;
+@property (getter=isCancelled) BOOL cancelled;
+
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist;
+
+
+//do not call this your self
+- (void)p_main;
 @end

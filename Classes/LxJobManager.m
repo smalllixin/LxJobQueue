@@ -8,20 +8,22 @@
 
 #import "LxJobManager.h"
 #import "LxPriorityQueue.h"
-
-NSString *const DefaultGroupId = @"default";
+#import "LxJobExecutor.h"
 
 @interface LxJobManager()
 
 @property (nonatomic, copy) NSString *name;
 
-@property (nonatomic, strong) NSMutableDictionary *jobGroup;// <NSString, LxPriorityQueue>
-@property (nonatomic, strong) NSMutableDictionary *runningJobGroup;
-@property (nonatomic, strong) dispatch_queue_t serialQueue;
-@property (nonatomic, strong) dispatch_queue_t concurrentlQueue;
+@property (nonatomic, strong) NSMutableDictionary *jobGroup;// <NSString, NSOperationQueue>
+
+//@property (nonatomic, strong) NSMutableDictionary *runningJobGroup;
+
 @property (nonatomic, strong) dispatch_queue_t syncQueue;
 
 @property (nonatomic, strong) NSObject *lock;
+
+@property (nonatomic, strong) LxJobExecutor *defaultOperationQueue;
+
 @end
 
 @implementation LxJobManager
@@ -53,56 +55,85 @@ NSString *const DefaultGroupId = @"default";
 - (void)setupEnv {
     self.lock = [NSObject new];
     
-    LxPriorityQueue *defaultPriorityQueue = [[LxPriorityQueue alloc] init];
-    self.jobGroup = [[NSMutableDictionary alloc] initWithObjectsAndKeys:defaultPriorityQueue,DefaultGroupId,nil];
-    self.runningJobGroup = [[NSMutableDictionary alloc] init];
+    _defaultOperationQueue = [LxJobExecutor newConcurrentJobExecutor:2];
+    _defaultOperationQueue.name = @"DefaultOperationQueue";
     
-    self.serialQueue = dispatch_queue_create("jobmanager_serial", DISPATCH_QUEUE_SERIAL);
-    self.concurrentlQueue = dispatch_queue_create("jobmanager_cocurretn", DISPATCH_QUEUE_CONCURRENT);
+    self.jobGroup = [[NSMutableDictionary alloc] initWithObjectsAndKeys:_defaultOperationQueue, DefaultJobGroupId,nil];
+    
     self.syncQueue = dispatch_queue_create("jobmanage_queue", DISPATCH_QUEUE_SERIAL);
 }
 
+
 #pragma mark - Public
-- (void)clearAndStopAllJobs {
-    
-}
-
-- (void)addJobInBackground:(LxJob *)job priority:(NSInteger)priority{
-    
-    if (!job.groupId) {
-        job.groupId = DefaultGroupId;
-    }
-    
-    __weak typeof(self) wself = self;
-    dispatch_async(self.syncQueue, ^{
-        if (wself.jobGroup[job.groupId] == nil) {
-            wself.jobGroup[job.groupId] = [[LxPriorityQueue alloc] init];
+- (void)cancelAllJobs {
+    dispatch_sync(self.syncQueue, ^{
+        for (NSString *groupId in _jobGroup) {
+            LxJobExecutor *q = _jobGroup[groupId];
+            [q cancelAllJobs];
         }
-        LxPriorityQueue *q = wself.jobGroup[job.groupId];
-        [q addObject:job];
-        [self touchJobScheduler];
     });
 }
 
-- (void)touchJobScheduler {
+- (void)addJobInBackground:(LxJob *)job{
+    [job jobAdded];
+    [_defaultOperationQueue addJobToQueue:job];
+}
+
+- (void)addQueueJob:(LxJob*)job toGroup:(NSString*)groupId {
+    job.groupId =  groupId;
     dispatch_async(self.syncQueue, ^{
-        //pick job to queue
-        [self.jobGroup enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-            if ([self isRunningJobGroupIdle:key]) {
-                //
-            } else {
-                //this group busy
-            }
-        }];
+        LxJobExecutor *q = _jobGroup[groupId];
+        if (q == nil) {
+            q = [LxJobExecutor newSerialJobExecutor];
+            _jobGroup[groupId] = q;
+        }
+        [q addJobToQueue:job];
     });
 }
 
-- (BOOL)isRunningJobGroupIdle:(NSString*)groupId {
-    if (self.runningJobGroup[groupId]) {
-        return NO;
-    } else {
-        return YES;
-    }
+- (NSInteger)jobCountInGroup:(NSString*)groupId {
+    __block NSInteger count;
+    dispatch_sync(self.syncQueue, ^{
+        LxJobExecutor *q = _jobGroup[groupId];
+        if (q == nil) {
+            count = 0;
+        } else {
+            count = [q jobCount];
+        }
+    });
+    return count;
 }
 
+- (void)waitUtilAllJobFinished {
+    dispatch_sync(self.syncQueue, ^{
+        for (NSString *groupId in self.jobGroup) {
+            LxJobExecutor *q = self.jobGroup[groupId];
+            [q waitAllJobFinished];
+        }
+    });
+}
+
+- (NSInteger)jobCount {
+    __block NSInteger count = 0;
+    dispatch_sync(self.syncQueue, ^{
+        for (NSString *groupId in self.jobGroup) {
+            LxJobExecutor *q = self.jobGroup[groupId];
+            count += [q jobCount];
+        }
+    });
+    return count;
+}
+
+- (BOOL)isQueueDeallocInGroup:(NSString*)group {
+    __block BOOL isDealloced = NO;
+    dispatch_sync(self.syncQueue, ^{
+        isDealloced = self.jobGroup[group] == nil;
+    });
+    return isDealloced;
+}
+
+#pragma mark - Dealloc
+- (void)dealloc {
+    [self waitUtilAllJobFinished];
+}
 @end

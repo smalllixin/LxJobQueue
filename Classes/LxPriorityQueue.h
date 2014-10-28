@@ -8,14 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol LxPriorityObject <NSObject>
-
--(NSInteger)priority;
+@protocol Comparable <NSObject>
+- (NSComparisonResult)compare:(id)object;
 @end
 
 @interface LxPriorityQueue : NSObject
 
-- (void)addObject:(id<LxPriorityObject>)object;
+- (void)addObject:(id<Comparable>)object;
 - (id)removeMaxObject;
 - (id)maxObject;
 - (NSInteger)count;
