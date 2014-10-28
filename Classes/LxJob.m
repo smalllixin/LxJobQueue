@@ -9,6 +9,7 @@
 #import "LxJob.h"
 
 NSString *const DefaultJobGroupId = @"default";
+NSInteger const DefaultRetryCount = 20;
 
 @interface LxJob()
 
@@ -20,6 +21,16 @@ NSString *const DefaultJobGroupId = @"default";
 
 @implementation LxJob
 
+- (id)init {
+    if (self = [super init]) {
+        self.groupId = DefaultJobGroupId;
+        self.requiresNetwork = NO;
+        self.persist = NO;
+        self.retryCount = DefaultRetryCount;
+    }
+    return self;
+}
+
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist {
     if (self = [super init]) {
         if (groupId == nil) {
@@ -30,7 +41,7 @@ NSString *const DefaultJobGroupId = @"default";
         
         self.requiresNetwork = requiresNettwork;
         self.persist = persist;
-        self.retryCount = 20;
+        self.retryCount = DefaultRetryCount;
     }
     return self;
 }

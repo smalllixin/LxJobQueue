@@ -35,6 +35,7 @@ extern NSString *const DefaultJobGroupId;
 @property (getter=isFinished) BOOL finished;
 @property (getter=isCancelled) BOOL cancelled;
 
+- (id)init;
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist;
 
 
