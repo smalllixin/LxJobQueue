@@ -31,7 +31,13 @@
 
 - (void)save;
 
+- (void)resumePersistJobs;
+
+#pragma mark for Test
+- (void)clearPersistJob;
+
 - (void)db_insert_job:(LxJob*)job;
+
 - (NSInteger)genJobId;
 
 @end

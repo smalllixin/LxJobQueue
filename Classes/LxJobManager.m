@@ -9,10 +9,10 @@
 #import "LxJobManager.h"
 #import "LxPriorityQueue.h"
 #import "LxJobExecutor.h"
-
+#import "LxJobConstant.h"
 #import <sqlite3.h>
 
-@interface LxJobManager()
+@interface LxJobManager()<LxJobExecutorDelegate>
 
 @property (nonatomic, copy) NSString *name;
 
@@ -42,6 +42,7 @@
 
 - (id)initWithName:(NSString*)name {
     if (self = [super init]) {
+        self.name = name;
         [self setupEnv];
     }
     return self;
@@ -62,6 +63,7 @@
     
     _defaultOperationQueue = [LxJobExecutor newConcurrentJobExecutor:2];
     _defaultOperationQueue.name = @"DefaultOperationQueue";
+    _defaultOperationQueue.delegate = self;
     
     self.jobGroup = [[NSMutableDictionary alloc] initWithObjectsAndKeys:_defaultOperationQueue, DefaultJobGroupId,nil];
     
@@ -79,17 +81,24 @@
 }
 
 - (void)addJobInBackground:(LxJob *)job{
-    job.jobId = [self genJobId];
     [self addQueueJob:job toGroup:DefaultJobGroupId];
 }
 
 - (void)addQueueJob:(LxJob*)job toGroup:(NSString*)groupId {
     job.groupId =  groupId;
+    if (job.persist) {
+        dispatch_on_main_block(^{
+            job.jobId = [self genJobId];
+            [self db_insert_job:job];
+        });
+    }
+    
     [job jobAdded];
     dispatch_async(self.syncQueue, ^{
         LxJobExecutor *q = _jobGroup[groupId];
         if (q == nil) {
             q = [LxJobExecutor newSerialJobExecutor];
+            q.delegate = self;
             _jobGroup[groupId] = q;
         }
         [q addJobToQueue:job];
@@ -129,20 +138,34 @@
     return count;
 }
 
+#pragma mark LxJobExecutorDelegate
+- (void)jobExecutor:(LxJobExecutor*)executor finishJob:(LxJob*)job {
+    [self db_remove_job:job];
+}
+
+- (void)jobExecutor:(LxJobExecutor*)executor cancelJob:(LxJob*)job {
+    [self db_remove_job:job];
+}
+
+
+#pragma mark - Persistence
 - (void)save {
-//    [self db_open];
     [self genJobId];
+}
+
+- (void)resumePersistJobs {
+#warning TODO recover jobs from db and add to executor
+}
+
+- (void)clearPersistJob {
+    dispatch_on_main_block(^{
+        [self db_remove_jobs];
+    });
 }
 
 #pragma mark - Sqlite 
 - (void)db_init {
     [self db_open];
-    NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-    NSString *dbname = [docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.db", self.name]];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:dbname]) {
-        return;
-    }
     NSString *createSQL = @"CREATE TABLE IF NOT EXISTS jobs (\
                                 jobId INTEGER,\
                                 persist INTEGER,\
@@ -203,6 +226,27 @@
     return newId;
 }
 
+- (void)db_remove_jobs {
+    [self db_open];
+    sqlite3_stmt *stmt;
+    NSString *sql = @"DELETE FROM jobs";
+    sqlite3_prepare_v2(_db, [sql UTF8String], -1, &stmt, NULL);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    [self db_close];
+}
+
+- (void)db_remove_job:(LxJob*)job {
+    [self db_open];
+    sqlite3_stmt *stmt;
+    NSString *sql = @"DELETE FROM jobs WHERE jobId=?";
+    sqlite3_prepare_v2(_db, [sql UTF8String], -1, &stmt, NULL);
+    sqlite3_bind_int64(stmt, 1, job.jobId);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
+    [self db_close];
+}
+
 - (void)db_insert_job:(LxJob*)job {
     [self db_open];
     sqlite3_stmt *stmt;
@@ -221,11 +265,10 @@
     NSData *userInfo = [NSKeyedArchiver archivedDataWithRootObject:job];
     sqlite3_bind_blob(stmt, 5, [userInfo bytes], (int)[userInfo length], SQLITE_STATIC);
     
-    int r = sqlite3_step(stmt);
+    sqlite3_step(stmt);
     sqlite3_finalize(stmt);
     [self db_close];
 }
-
 
 #pragma mark - Dealloc
 - (void)dealloc {

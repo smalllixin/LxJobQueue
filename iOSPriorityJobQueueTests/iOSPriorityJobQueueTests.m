@@ -24,7 +24,7 @@
 - (void)setUp {
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    self.manager = [[LxJobManager alloc] init];
+    self.manager = [[LxJobManager alloc] initWithName:@"test"];
 }
 
 - (void)tearDown {
@@ -36,8 +36,8 @@
 }
 
 - (void)testJobQueueManagerCreate {
-    LxJobManager *manager = [[LxJobManager alloc] init];
-    XCTAssert([manager.name isEqualToString:@"default"]);
+    LxJobManager *manager = [[LxJobManager alloc] initWithName:@"test"];
+    XCTAssert([manager.name isEqualToString:@"test"]);
 }
 
 - (void)testJobCreateAndDefault {
@@ -117,6 +117,7 @@
     TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"save me"];
     job.jobId = [self.manager genJobId];
     [self.manager db_insert_job:job];
+    [self.manager clearPersistJob];
 }
 
 #pragma mark Test Helper

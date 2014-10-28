@@ -13,6 +13,15 @@ typedef enum : NSUInteger {
     kJobExecutorModeConcurrent,
 } JobExecutorMode;
 
+@class LxJobExecutor;
+
+@protocol LxJobExecutorDelegate <NSObject>
+
+- (void)jobExecutor:(LxJobExecutor*)executor finishJob:(LxJob*)job;
+- (void)jobExecutor:(LxJobExecutor*)executor cancelJob:(LxJob*)job;
+
+@end
+
 @interface LxJobExecutor : NSObject
 
 + (LxJobExecutor*)newSerialJobExecutor;
@@ -27,6 +36,7 @@ typedef enum : NSUInteger {
 - (NSInteger)runningJobCount;
 - (NSInteger)jobCount;
 
+@property (nonatomic, assign) id<LxJobExecutorDelegate> delegate;
 @property (nonatomic, assign, readonly) JobExecutorMode mode;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) void(^queueEmptyEvent)();

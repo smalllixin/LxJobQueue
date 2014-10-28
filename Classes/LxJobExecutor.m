@@ -7,7 +7,7 @@
 //
 
 #import "LxJobExecutor.h"
-#import <pthread.h>
+#import "LxJobConstant.h"
 
 @interface LxJobExecutor()
 
@@ -81,6 +81,11 @@
                 @synchronized(wself.lock) {
                     [wself.runningJobs removeObject:job];
                 }
+                if (wself.delegate) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [wself.delegate jobExecutor:wself finishJob:job];
+                    });
+                }
                 [wself touch];
             });
         } else if (_pendingJobs.count == 0 && _runningJobs.count == 0) {
@@ -103,6 +108,14 @@
         }
         
         [self.pendingJobs removeAllObjects];
+    }
+    
+    if (self.delegate) {
+        for (LxJob *job in cancelledJobs) {
+            dispatch_on_main_block(^{
+                [self.delegate jobExecutor:self cancelJob:job];
+            });
+        }
     }
     return cancelledJobs;
 }

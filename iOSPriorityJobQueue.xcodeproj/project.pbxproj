@@ -69,6 +69,7 @@
 		A30371D919F89643007A875D /* LxPriorityQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxPriorityQueue.h; sourceTree = "<group>"; };
 		A30371DA19F89643007A875D /* LxPriorityQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxPriorityQueue.m; sourceTree = "<group>"; };
 		A30371DE19F896B2007A875D /* PriorityQueueTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityQueueTest.m; sourceTree = "<group>"; };
+		A3F3330019FFED0300B04217 /* LxJobConstant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LxJobConstant.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +172,7 @@
 				82B91FC019FF3658004F4B05 /* LxJobExecutor.m */,
 				A30371D919F89643007A875D /* LxPriorityQueue.h */,
 				A30371DA19F89643007A875D /* LxPriorityQueue.m */,
+				A3F3330019FFED0300B04217 /* LxJobConstant.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
