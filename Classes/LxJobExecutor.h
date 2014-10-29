@@ -40,6 +40,8 @@ typedef enum : NSUInteger {
 
 - (void)resume;
 
+- (NSMutableArray*)pendingJobs;
+
 @property (nonatomic, assign) id<LxJobExecutorDelegate> delegate;
 @property (nonatomic, assign, readonly) JobExecutorMode mode;
 @property (nonatomic, copy) NSString *name;

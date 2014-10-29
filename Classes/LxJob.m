@@ -7,6 +7,7 @@
 //
 
 #import "LxJob.h"
+#import "LxJobEntity.h"
 
 NSString *const DefaultJobGroupId = @"default";
 NSInteger const DefaultRetryCount = 20;

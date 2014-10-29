@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="14A389" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="LxJobEntity" representedClassName="LxJobEntity" syncable="YES">
+        <attribute name="createTime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="groupId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="jobId" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="managerName" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="persist" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="requiresNetwork" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="userInfo" optional="YES" attributeType="Binary" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="LxJobEntity" positionX="-63" positionY="-18" width="128" height="150"/>
+    </elements>
+</model>

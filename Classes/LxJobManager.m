@@ -10,7 +10,7 @@
 #import "LxPriorityQueue.h"
 #import "LxJobExecutor.h"
 #import "LxJobConstant.h"
-#import <sqlite3.h>
+#import "LxJobQueueCoreData.h"
 
 @interface LxJobManager()<LxJobExecutorDelegate>
 
@@ -24,7 +24,8 @@
 
 @property (nonatomic, strong) LxJobExecutor *defaultOperationQueue;
 
-@property (nonatomic, assign) sqlite3 *db;
+@property (nonatomic, assign) LxJobQueueCoreData *coreData;
+
 @property (nonatomic, assign) NSInteger dbOpenCount;
 
 @end
@@ -57,7 +58,7 @@
 }
 
 - (void)setupEnv {
-    [self db_init];
+    self.coreData = [LxJobQueueCoreData defaultStack];
     
     self.lock = [NSObject new];
     
@@ -68,6 +69,16 @@
     self.jobGroup = [[NSMutableDictionary alloc] initWithObjectsAndKeys:_defaultOperationQueue, DefaultJobGroupId,nil];
     
     self.syncQueue = dispatch_queue_create("jobmanage_queue", DISPATCH_QUEUE_SERIAL);
+    
+    [self restore];
+}
+
+- (void)restore {
+    dispatch_on_main_block(^{
+    });
+    dispatch_sync(self.syncQueue, ^{
+        
+    });
 }
 
 #pragma mark - Public
@@ -88,8 +99,8 @@
     job.groupId =  groupId;
     if (job.persist) {
         dispatch_on_main_block(^{
-            job.jobId = [self genJobId];
-            [self db_insert_job:job];
+            job.jobId = [[NSUUID UUID] UUIDString];
+            [_coreData addJobEntityFromJob:job inManager:_name];
         });
     }
     
@@ -140,139 +151,48 @@
 
 #pragma mark LxJobExecutorDelegate
 - (void)jobExecutor:(LxJobExecutor*)executor finishJob:(LxJob*)job {
-    [self db_remove_job:job];
+    [_coreData removeJobEntityById:job.jobId];
 }
 
 - (void)jobExecutor:(LxJobExecutor*)executor cancelJob:(LxJob*)job {
-    [self db_remove_job:job];
+    [_coreData removeJobEntityById:job.jobId];
 }
-
 
 #pragma mark - Persistence
-- (void)save {
-    [self genJobId];
-}
 
-- (void)resumePersistJobs {
-#warning TODO recover jobs from db and add to executor
-}
-
-- (void)clearPersistJob {
-    dispatch_on_main_block(^{
-        [self db_remove_jobs];
+- (void)pause {
+    dispatch_sync(self.syncQueue, ^{
+        for (NSString *groupId in _jobGroup) {
+            LxJobExecutor *q = self.jobGroup[groupId];
+            if (q) {
+                [q pause];
+            }
+        }
     });
 }
 
-#pragma mark - Sqlite 
-- (void)db_init {
-    [self db_open];
-    NSString *createSQL = @"CREATE TABLE IF NOT EXISTS jobs (\
-                                jobId INTEGER,\
-                                persist INTEGER,\
-                                requiresNetwork INTEGER,\
-                                groupId TEXT,\
-                                userInfo BLOB\
-                            )";
-    sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(_db, [createSQL UTF8String], -1, &stmt, NULL) != SQLITE_OK) {
-        NSString *errMsg = [NSString stringWithFormat:@"DB Error: %s", sqlite3_errmsg(_db)];
-        NSLog(@"%@", errMsg);
-        NSAssert(NO, errMsg);
-        return;
-    }
-    
-    if (sqlite3_step(stmt) != SQLITE_DONE) {
-        NSString *errMsg = [NSString stringWithFormat:@"DB Error: %s", sqlite3_errmsg(_db)];
-        NSLog(@"%@", errMsg);
-        NSAssert(NO, errMsg);
-        return;
-    }
-    
-    sqlite3_finalize(stmt);
-    [self db_close];
-}
-
-- (void)db_open {
-    if (_dbOpenCount == 0) {
-        NSString *docPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        NSString *dbname = [docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.db", self.name]];
-        if (sqlite3_open([dbname UTF8String], &_db) != SQLITE_OK) {
-            NSString *errMsg = [NSString stringWithFormat:@"DB Error: %s", sqlite3_errmsg(_db)];
-            NSLog(@"%@", errMsg);
-            NSAssert(NO, errMsg);
+- (void)pauseJobsInGroup:(NSString*)groupId {
+    dispatch_async(self.syncQueue, ^{
+        LxJobExecutor *q = self.jobGroup[groupId];
+        if (q) {
+            [q pause];
         }
-        
-    }
-    _dbOpenCount ++;
-    
+    });
 }
 
-- (void)db_close {
-    _dbOpenCount --;
-    if (_dbOpenCount <= 0) {
-        sqlite3_close(_db);
-    }
-}
-
-- (NSInteger)genJobId {
-    [self db_open];
-    NSString *sql = @"SELECT MAX(jobId) FROM jobs";
-    sqlite3_stmt *stmt;
-    sqlite3_prepare_v2(_db, [sql UTF8String], -1, &stmt, NULL);
-    sqlite3_step(stmt);//SQLITE_ROW
-    NSInteger newId = sqlite3_column_int64(stmt, 0) + 1;
-    sqlite3_finalize(stmt);
-    [self db_close];
-    return newId;
-}
-
-- (void)db_remove_jobs {
-    [self db_open];
-    sqlite3_stmt *stmt;
-    NSString *sql = @"DELETE FROM jobs";
-    sqlite3_prepare_v2(_db, [sql UTF8String], -1, &stmt, NULL);
-    sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    [self db_close];
-}
-
-- (void)db_remove_job:(LxJob*)job {
-    [self db_open];
-    sqlite3_stmt *stmt;
-    NSString *sql = @"DELETE FROM jobs WHERE jobId=?";
-    sqlite3_prepare_v2(_db, [sql UTF8String], -1, &stmt, NULL);
-    sqlite3_bind_int64(stmt, 1, job.jobId);
-    sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    [self db_close];
-}
-
-- (void)db_insert_job:(LxJob*)job {
-    [self db_open];
-    sqlite3_stmt *stmt;
-    NSString *sql = @"INSERT INTO jobs(jobId,persist,requiresNetwork,groupId,userInfo) VALUES(?,?,?,?,?)";
-    if (sqlite3_prepare_v2(_db, [sql UTF8String], -1, &stmt, NULL) != SQLITE_OK) {
-        NSString *errMsg = [NSString stringWithFormat:@"DB Error: %s", sqlite3_errmsg(_db)];
-        NSLog(@"%@", errMsg);
-        NSAssert(NO, errMsg);
-        return;
-    }
-    
-    sqlite3_bind_int64(stmt, 1, job.jobId);
-    sqlite3_bind_int(stmt, 2, job.persist);
-    sqlite3_bind_int(stmt, 3, job.requiresNetwork);
-    sqlite3_bind_text(stmt, 4, [job.groupId UTF8String], -1, SQLITE_TRANSIENT);
-    NSData *userInfo = [NSKeyedArchiver archivedDataWithRootObject:job];
-    sqlite3_bind_blob(stmt, 5, [userInfo bytes], (int)[userInfo length], SQLITE_STATIC);
-    
-    sqlite3_step(stmt);
-    sqlite3_finalize(stmt);
-    [self db_close];
+- (void)resume {
+    dispatch_sync(self.syncQueue, ^{
+        for (NSString *groupId in _jobGroup) {
+            LxJobExecutor *q = self.jobGroup[groupId];
+            if (q) {
+                [q resume];
+            }
+        }
+    });
 }
 
 #pragma mark - Dealloc
 - (void)dealloc {
     [self waitUtilAllJobFinished];
-    [self db_close];
 }
 @end

@@ -20,7 +20,7 @@ extern NSString *const DefaultJobGroupId;
 
 @end
 
-@class LxJobManager;
+@class LxJobManager, LxJobEntity;
 
 @interface LxJob : NSObject<LxJobProtocol,NSCoding>
 
@@ -35,11 +35,10 @@ extern NSString *const DefaultJobGroupId;
 @property (getter=isFinished) BOOL finished;
 @property (getter=isCancelled) BOOL cancelled;
 
-@property (nonatomic, assign) NSInteger jobId;
+@property (nonatomic, assign) NSString *jobId;
 
 - (id)init;
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist;
-
 
 //do not call this your self
 - (void)p_main;

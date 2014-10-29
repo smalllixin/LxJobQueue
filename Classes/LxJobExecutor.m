@@ -129,6 +129,14 @@
     [self touch];
 }
 
+- (NSMutableArray*)pendingJobs {
+    NSMutableArray *jobs;
+    @synchronized(_lock) {
+        jobs = [[NSMutableArray alloc] initWithArray:_pendingJobs];
+    }
+    return jobs;
+}
+
 - (NSArray*)cancelAllJobs {
     //running job cannot cancel
     //just cancel pending jobs
