@@ -31,6 +31,18 @@ NSInteger const DefaultRetryCount = 20;
     return self;
 }
 
+- (id)initWithEntity:(LxJobEntity*)entity {
+    if (self = [super init]) {
+        self.groupId = entity.groupId;
+        self.requiresNetwork = [entity.requiresNetwork boolValue];
+        self.persist = [entity.persist boolValue];
+        self.retryCount = [entity.retryCount integerValue];
+        
+//        self.userInfo = ;
+    }
+    return self;
+}
+
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist {
     if (self = [super init]) {
         if (groupId == nil) {
@@ -44,6 +56,12 @@ NSInteger const DefaultRetryCount = 20;
         self.retryCount = DefaultRetryCount;
     }
     return self;
+}
+
+- (void)restoreToBeginState {
+    self.cancelled = NO;
+    self.executing = NO;
+    self.finished = NO;
 }
 
 - (void)cancelJob {
@@ -77,22 +95,25 @@ NSInteger const DefaultRetryCount = 20;
     }
 }
 
-#pragma mark - Should Override
+#pragma mark - Job Proxy
 - (void)jobAdded {
-    
+    if (_userJob) {
+        [_userJob jobAdded];
+    }
 }
 - (NSError*)jobRun {
-    return nil;
+    return [_userJob jobRun];
 }
 - (BOOL)jobShouldReRunWithError:(NSError*)error {
-    return NO;
+    return [_userJob jobShouldReRunWithError:error];
 }
 - (void)jobCancelled {
-    
+    return [_userJob jobCancelled];
 }
 
 #pragma mark NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:self.jobId forKey:@"jobId"];
     [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeBool:self.persist forKey:@"persist"];
     [aCoder encodeBool:self.requiresNetwork forKey:@"requiresNetwork"];
@@ -102,6 +123,7 @@ NSInteger const DefaultRetryCount = 20;
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
+        self.jobId = [aDecoder decodeObjectForKey:@"jobId"];
         self.name = [aDecoder decodeObjectForKey:@"name"];
         self.persist = [aDecoder decodeBoolForKey:@"persist"];
         self.requiresNetwork = [aDecoder decodeBoolForKey:@"requiresNetwork"];

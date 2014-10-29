@@ -8,37 +8,41 @@
 
 #import <Foundation/Foundation.h>
 #import "LxPriorityQueue.h"
+#import "LxJobConstant.h"
 
 extern NSString *const DefaultJobGroupId;
 
-@protocol LxJobProtocol <NSObject>
-
-- (void)jobAdded;
-- (NSError*)jobRun;
-- (BOOL)jobShouldReRunWithError:(NSError*)error;
-- (void)jobCancelled;
-
-@end
-
 @class LxJobManager, LxJobEntity;
 
-@interface LxJob : NSObject<LxJobProtocol,NSCoding>
+@interface LxJob : NSObject<NSCoding>
+
+@property (nonatomic, assign) NSString *jobId;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *groupId;
 
 @property (nonatomic, readonly, assign) BOOL persist;
 @property (nonatomic, readonly, assign) BOOL requiresNetwork;
-@property (nonatomic, copy) NSString *groupId;
 
 @property (nonatomic, assign) NSInteger retryCount;
-@property (nonatomic, copy) NSString *name;
 
 @property (getter=isExecuting) BOOL executing;
 @property (getter=isFinished) BOOL finished;
 @property (getter=isCancelled) BOOL cancelled;
 
-@property (nonatomic, assign) NSString *jobId;
+@property (nonatomic, strong) id<LxJobProtocol> userJob;
 
 - (id)init;
+- (id)initWithEntity:(LxJobEntity*)entity;
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist;
+
+- (void)restoreToBeginState;
+
+#pragma mark Proxy
+- (void)jobAdded;
+- (NSError*)jobRun;
+- (BOOL)jobShouldReRunWithError:(NSError*)error;
+- (void)jobCancelled;
+
 
 //do not call this your self
 - (void)p_main;

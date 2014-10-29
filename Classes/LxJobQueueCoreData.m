@@ -116,13 +116,13 @@
 #pragma mark - logic
 
 -(void)addJobEntityFromJob:(LxJob*)job inManager:(NSString*)managerName{
-    LxJobEntity *e = [[LxJobEntity alloc] initWithContext:_managedObjectContext];
+    LxJobEntity *e = [[LxJobEntity alloc] initWithContext:self.managedObjectContext];
     e.jobId = job.jobId;
     e.groupId = job.groupId;
     e.persist = @(job.persist);
     e.requiresNetwork = @(job.requiresNetwork);
-    NSData *userInfo = [NSKeyedArchiver archivedDataWithRootObject:job];
-    e.userInfo = userInfo;
+    e.retryCount = @(job.retryCount);
+    e.userInfo = [job.userJob jobPersistData];;
     e.managerName = managerName;
     [self addJobEntity:e];
 }
@@ -183,6 +183,14 @@
 
 -(NSArray*)allJobEntities {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:LxJobEntityName];
+    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"createTime" ascending:YES]];
+    NSError *error;
+    return [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
+}
+
+-(NSArray*)allJobEntitiesByManagerName:(NSString*)managerName {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:LxJobEntityName];
+    fetchRequest.predicate = [NSPredicate predicateWithFormat:@"managerName == %@", managerName];
     fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"createTime" ascending:YES]];
     NSError *error;
     return [_managedObjectContext executeFetchRequest:fetchRequest error:&error];

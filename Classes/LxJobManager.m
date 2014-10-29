@@ -11,6 +11,7 @@
 #import "LxJobExecutor.h"
 #import "LxJobConstant.h"
 #import "LxJobQueueCoreData.h"
+#import "LxJobEntity.h"
 
 @interface LxJobManager()<LxJobExecutorDelegate>
 
@@ -75,6 +76,12 @@
 
 - (void)restore {
     dispatch_on_main_block(^{
+//        NSArray *entities = [_coreData allJobEntitiesByManagerName:_name];
+//        for (LxJobEntity *entity in entities) {
+//            LxJob *job = [NSKeyedUnarchiver unarchiveObjectWithData:entity.userInfo];
+//            [job restoreToBeginState];
+//            //todo add to queue
+//        }
     });
     dispatch_sync(self.syncQueue, ^{
         
@@ -91,12 +98,18 @@
     });
 }
 
-- (void)addJobInBackground:(LxJob *)job{
+- (void)addJobInBackground:(id<LxJobProtocol>)job {
     [self addQueueJob:job toGroup:DefaultJobGroupId];
 }
 
-- (void)addQueueJob:(LxJob*)job toGroup:(NSString*)groupId {
-    job.groupId =  groupId;
+- (void)addQueueJob:(id<LxJobProtocol>)userJob toGroup:(NSString*)groupId {
+    LxJob *job = [[LxJob alloc] initWithGroupId:groupId requiresNetwork:[userJob jobFeatureRequiresNetworkSupport] persist:[userJob jobFeaturePersistSupport]];
+    
+    if ([userJob respondsToSelector:@selector(jobFeatureRetryCount)]) {
+        job.retryCount = [userJob jobFeatureRetryCount];
+    }
+    
+    job.userJob = userJob;
     if (job.persist) {
         dispatch_on_main_block(^{
             job.jobId = [[NSUUID UUID] UUIDString];

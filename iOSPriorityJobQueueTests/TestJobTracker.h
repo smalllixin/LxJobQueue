@@ -8,11 +8,16 @@
 
 #import "LxJob.h"
 
-@interface TestJobTracker : LxJob<LxJobProtocol>
+@interface TestJobTracker : NSObject<LxJobProtocol>
+
+
+@property (nonatomic, copy) NSString *name;
 
 @property (nonatomic, assign) BOOL jobAddedCalled;
 @property (nonatomic, assign) BOOL jobRunCalled;
 @property (nonatomic, assign) BOOL jobShouldReRunCalled;
 @property (nonatomic, assign) BOOL jobCancelledCalled;
+
+@property (nonatomic, assign) NSInteger retryCount;
 
 @end

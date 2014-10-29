@@ -17,6 +17,7 @@ extern NSString *const LxJobEntityName;
 @property (nonatomic, retain) NSString * jobId;
 @property (nonatomic, retain) NSNumber * persist;
 @property (nonatomic, retain) NSNumber * requiresNetwork;
+@property (nonatomic, retain) NSNumber * retryCount;
 @property (nonatomic, retain) NSString * groupId;
 @property (nonatomic, retain) NSData * userInfo;
 @property (nonatomic, retain) NSDate * createTime;

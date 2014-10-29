@@ -31,7 +31,9 @@
 - (void)testSerialExecutor {
     self.executor = [LxJobExecutor newSerialJobExecutor];
     for (int i = 0; i < 100; i ++) {
-        TestSuccJob *job = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"job in executor:%d", i]];
+        TestSuccJob *userJob = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"job in executor:%d", i]];
+        LxJob *job = [[LxJob alloc] init];
+        job.userJob = userJob;
         [self.executor addJobToQueue:job];
     }
     [self.executor waitAllJobFinished];
@@ -41,7 +43,9 @@
 - (void)testConcurrentExecutor {
     self.executor = [LxJobExecutor newConcurrentJobExecutor:3];
     for (int i = 0; i < 100; i ++) {
-        TestSuccJob *job = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"job in CON executor:%d", i]];
+        TestSuccJob *userJob = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"job in CON executor:%d", i]];
+        LxJob *job = [[LxJob alloc] init];
+        job.userJob = userJob;
         [self.executor addJobToQueue:job];
     }
     [self.executor waitAllJobFinished];
@@ -52,7 +56,9 @@
     self.executor = [LxJobExecutor newSerialJobExecutor];
     [self.executor pause];
     for (int i = 0; i < 30; i ++) {
-        TestSuccJob *job = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"testExecutorPause executor:%d", i]];
+        TestSuccJob *userJob = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"testExecutorPause executor:%d", i]];
+        LxJob *job = [[LxJob alloc] init];
+        job.userJob = userJob;
         [self.executor addJobToQueue:job];
     }
     XCTAssertEqual([self.executor pendingJobCount], 30);
@@ -64,7 +70,9 @@
 - (void)testExecutorPauseAndWait {
     self.executor = [LxJobExecutor newSerialJobExecutor];
     [self.executor pause];
-    TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"testExecutorPauseAndWait"];
+    TestSuccJob *userJob = [[TestSuccJob alloc] initWithName:@"testExecutorPauseAndWait"];
+    LxJob *job = [[LxJob alloc] init];
+    job.userJob = userJob;
     [self.executor addJobToQueue:job];
     [self.executor waitAllJobFinished];
     XCTAssertEqual([self.executor pendingJobCount], 1);

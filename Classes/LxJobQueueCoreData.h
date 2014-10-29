@@ -27,6 +27,7 @@
 -(void)removeAllJobs;
 -(void)removeJobEntityById:(NSString*)jobId;
 -(NSArray*)allJobEntities;
+-(NSArray*)allJobEntitiesByManagerName:(NSString*)managerName;
 
 -(void)saveContext;
 

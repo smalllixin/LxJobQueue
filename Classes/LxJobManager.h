@@ -17,9 +17,9 @@
 
 - (id)initWithName:(NSString*)name;
 
-- (void)addJobInBackground:(LxJob*)job;
+- (void)addJobInBackground:(id<LxJobProtocol>)job;
 
-- (void)addQueueJob:(LxJob*)job toGroup:(NSString*)groupId;
+- (void)addQueueJob:(id<LxJobProtocol>)job toGroup:(NSString*)groupId;
 
 - (NSInteger)jobCountInGroup:(NSString*)groupId;
 
@@ -28,5 +28,8 @@
 - (void)waitUtilAllJobFinished;
 
 - (NSInteger)jobCount;
+
+- (void)pause;
+- (void)resume;
 
 @end

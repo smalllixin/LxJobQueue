@@ -11,7 +11,7 @@
 @implementation TestSuccJob
 
 - (id)initWithName:(NSString*)name {
-    if (self = [super initWithGroupId:nil requiresNetwork:NO persist:NO]) {
+    if (self = [super init]) {
         self.name = name;
     }
     return self;
@@ -38,10 +38,6 @@
 
 - (void)jobCancelled {
     [super jobCancelled];
-}
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
-    [super encodeWithCoder:aCoder];
 }
 
 @end

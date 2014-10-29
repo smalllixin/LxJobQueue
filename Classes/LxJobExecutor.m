@@ -129,7 +129,7 @@
     [self touch];
 }
 
-- (NSMutableArray*)pendingJobs {
+- (NSMutableArray*)waitingJobs {
     NSMutableArray *jobs;
     @synchronized(_lock) {
         jobs = [[NSMutableArray alloc] initWithArray:_pendingJobs];

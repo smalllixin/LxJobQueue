@@ -16,6 +16,7 @@ NSString *const LxJobEntityName = @"LxJobEntity";
 @dynamic jobId;
 @dynamic persist;
 @dynamic requiresNetwork;
+@dynamic retryCount;
 @dynamic groupId;
 @dynamic userInfo;
 @dynamic createTime;

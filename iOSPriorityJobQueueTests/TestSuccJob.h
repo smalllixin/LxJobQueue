@@ -12,5 +12,4 @@
 @interface TestSuccJob : TestJobTracker
 
 - (id)initWithName:(NSString*)name;
-
 @end

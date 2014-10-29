@@ -43,9 +43,8 @@
 - (void)testJobCreateAndDefault {
     IGNORE_TEST
     TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"testJobCreateAndDefault"];
-    XCTAssert(job.requiresNetwork == NO);
-    XCTAssert(job.persist == NO);
-    XCTAssert([job.groupId isEqualToString:DefaultJobGroupId]);
+    XCTAssert([job jobFeatureRequiresNetworkSupport] == NO);
+    XCTAssert([job jobFeaturePersistSupport] == YES);
     XCTAssertEqual(job.jobAddedCalled, NO);
     XCTAssertEqual(job.jobRunCalled, NO);
     XCTAssertEqual(job.jobCancelledCalled, NO);
@@ -88,17 +87,26 @@
 
 - (void)testCancelJob {
     IGNORE_TEST
-    NSArray *jobs = [self addSuccAsyncJobsWithCount:30 name:@"testCancelJob"];
+    NSInteger totalJobs = 30;
+    [self.manager pause];
+    NSArray *jobs = [self addSuccAsyncJobsWithCount:totalJobs name:@"testCancelJob"];
+    
+    [self.manager resume];
     [self.manager cancelAllJobs];
-    [self.manager waitUtilAllJobFinished];
-    XCTAssertEqual([self.manager jobCount], 0);
+    
+    int cancelledCount = 0;
+    int runCount = 0;
     for (TestSuccJob *job in jobs) {
-        XCTAssertEqual(job.isExecuting, NO);
-        if (!job.isFinished) {
-            XCTAssertEqual(job.isCancelled, YES);
-            XCTAssertEqual(job.jobCancelledCalled, YES);
+        if (job.jobCancelledCalled) {
+            cancelledCount ++;
+        }
+        if (job.jobRunCalled) {
+            runCount ++;
         }
     }
+    XCTAssertEqual(cancelledCount+runCount, totalJobs);
+    [self.manager waitUtilAllJobFinished];
+    XCTAssertEqual([self.manager jobCount], 0);
 }
 
 - (void)testJobRunInGroup {
