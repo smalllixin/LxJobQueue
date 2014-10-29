@@ -48,4 +48,26 @@
     XCTAssertEqual([self.executor jobCount], 0);
 }
 
+- (void)testExecutorPause {
+    self.executor = [LxJobExecutor newSerialJobExecutor];
+    [self.executor pause];
+    for (int i = 0; i < 30; i ++) {
+        TestSuccJob *job = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"testExecutorPause executor:%d", i]];
+        [self.executor addJobToQueue:job];
+    }
+    XCTAssertEqual([self.executor pendingJobCount], 30);
+    [self.executor resume];
+    [self.executor waitAllJobFinished];
+    XCTAssertEqual([self.executor jobCount], 0);
+}
+
+- (void)testExecutorPauseAndWait {
+    self.executor = [LxJobExecutor newSerialJobExecutor];
+    [self.executor pause];
+    TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"testExecutorPauseAndWait"];
+    [self.executor addJobToQueue:job];
+    [self.executor waitAllJobFinished];
+    XCTAssertEqual([self.executor pendingJobCount], 1);
+}
+
 @end

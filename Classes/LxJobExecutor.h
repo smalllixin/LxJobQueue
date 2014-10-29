@@ -36,9 +36,14 @@ typedef enum : NSUInteger {
 - (NSInteger)runningJobCount;
 - (NSInteger)jobCount;
 
+- (void)pause;
+
+- (void)resume;
+
 @property (nonatomic, assign) id<LxJobExecutorDelegate> delegate;
 @property (nonatomic, assign, readonly) JobExecutorMode mode;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) void(^queueEmptyEvent)();
+@property (nonatomic, readonly, assign, getter=isPaused) BOOL paused;
 
 @end

@@ -18,6 +18,9 @@
 @property (nonatomic, assign) NSInteger currentJobsCount;
 @property (nonatomic, strong) NSMutableArray *pendingJobs;
 @property (nonatomic, strong) NSMutableArray *runningJobs;
+
+@property (nonatomic, assign) BOOL paused;
+
 @property (nonatomic, strong) NSObject *lock;
 @end
 
@@ -55,18 +58,24 @@
     _lock = [NSObject new];
     _pendingJobs = [[NSMutableArray alloc] init];
     _runningJobs = [[NSMutableArray alloc] init];
+    _paused = NO;
 }
 
 - (void)addJobToQueue:(LxJob *)job {
     @synchronized(_lock) {
         [_pendingJobs addObject:job];
+        if (_paused) {
+            return;
+        }
     }
-    
     [self touch];
 }
 
 - (void)touch {
     @synchronized(_lock) {
+        if (_paused) {
+            return;
+        }
         if (_pendingJobs.count > 0 && _runningJobs.count < _maxConcurrentCount) {
             LxJob *job = [_pendingJobs objectAtIndex:0];
             [_runningJobs addObject:job];
@@ -94,6 +103,30 @@
             }
         }
     }
+}
+
+- (NSArray*)stopAndDequeueJobs {
+    NSMutableArray *jobs = [NSMutableArray new];
+    @synchronized(_lock) {
+        for (LxJob *job in _pendingJobs) {
+            [jobs addObject:job];
+        }
+        [self.pendingJobs removeAllObjects];
+    }
+    return jobs;
+}
+
+- (void)pause {
+    @synchronized(_lock) {
+        _paused = YES;
+    }
+}
+
+- (void)resume {
+    @synchronized(_lock) {
+        _paused = NO;
+    }
+    [self touch];
 }
 
 - (NSArray*)cancelAllJobs {
@@ -128,7 +161,11 @@
     NSInteger availableCount = 10;
     do {
         @synchronized(_lock) {
-            availableCount = _pendingJobs.count + _runningJobs.count;
+            if (_paused) {
+                availableCount = _runningJobs.count;
+            } else {
+                availableCount = _pendingJobs.count + _runningJobs.count;
+            }
         }
         [NSThread sleepForTimeInterval:0.01];
     }while (availableCount > 0);
