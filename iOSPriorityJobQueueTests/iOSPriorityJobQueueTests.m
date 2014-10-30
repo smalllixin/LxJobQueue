@@ -12,6 +12,7 @@
 #import <XCTest/XCTest.h>
 #import "TestSuccJob.h"
 #import "TestFailedJob.h"
+#import "LxJobEntity.h"
 
 #define IGNORE_TEST ;
 
@@ -25,6 +26,8 @@
     [super setUp];
     // Put setup code here. This method is called before the invocation of each test method in the class.
     self.manager = [[LxJobManager alloc] initWithName:@"test"];
+    [self.manager regJobCls:[TestSuccJob class] kindName:[TestSuccJob regJobName]];
+    [self.manager regJobCls:[TestFailedJob class] kindName:[TestFailedJob regJobName]];
 }
 
 - (void)tearDown {
@@ -119,6 +122,59 @@
     [self.manager waitUtilAllJobFinished];
     XCTAssertEqual([self.manager jobCountInGroup:@"GOGO"], 0);
     XCTAssertEqual([self.manager jobCountInGroup:@"MEME"], 0);
+}
+
+
+- (void)testPersist {
+    IGNORE_TEST
+    [self.manager discards];
+    
+    TestSuccJob *job1 = [[TestSuccJob alloc] initWithName:@"testPersist1"];
+    TestSuccJob *job2 = [[TestSuccJob alloc] initWithName:@"testPersist2"];
+    TestFailedJob *job3 = [[TestFailedJob alloc] initWithName:@"testPersist3"];
+    [self.manager pause];
+    [self.manager addJobInBackground:job1];
+    [self.manager addJobInBackground:job2];
+    [self.manager addQueueJob:job3 toGroup:@"group2"];
+
+    NSArray *jobEntities = [self.manager currentPersistJobEntities];
+    XCTAssertEqual(jobEntities.count, 3);
+    
+    LxJobEntity *e1 = jobEntities[0];
+    XCTAssert(e1.jobId != nil);
+    XCTAssertEqualObjects(e1.groupId, DefaultJobGroupId);
+    XCTAssertEqualObjects(e1.managerName, self.manager.name);
+    XCTAssertEqualObjects(e1.userClsName, [TestSuccJob regJobName]);
+    
+    LxJobEntity *e2 = jobEntities[1];
+    XCTAssert(e2.jobId != nil);
+    XCTAssertEqualObjects(e2.groupId, DefaultJobGroupId);
+    XCTAssertEqualObjects(e2.managerName, self.manager.name);
+    XCTAssertEqualObjects(e2.userClsName, [TestSuccJob regJobName]);
+    
+    LxJobEntity *e3 = jobEntities[2];
+    XCTAssert(e3.jobId != nil);
+    XCTAssertEqualObjects(e3.groupId, @"group2");
+    XCTAssertEqualObjects(e3.managerName, self.manager.name);
+    XCTAssertEqualObjects(e3.userClsName, [TestFailedJob regJobName]);
+    
+    [self.manager resume];
+    [self.manager waitUtilAllJobFinished];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing Persist Works!"];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSArray *jobEntities = [self.manager currentPersistJobEntities];
+        XCTAssertEqual(jobEntities.count, 0);
+        [expectation fulfill];
+    });
+    
+    [self waitForExpectationsWithTimeout:2.1f handler:^(NSError *error) {
+        if(error)
+        {
+            NSLog(@"error is: %@", [error localizedDescription]);
+        }
+    }];
 }
 
 #pragma mark Test Helper

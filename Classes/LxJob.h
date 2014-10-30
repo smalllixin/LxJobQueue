@@ -16,9 +16,9 @@ extern NSString *const DefaultJobGroupId;
 
 @interface LxJob : NSObject<NSCoding>
 
-@property (nonatomic, assign) NSString *jobId;
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *jobId;
 @property (nonatomic, copy) NSString *groupId;
+@property (nonatomic, copy) NSString *userClsName;
 
 @property (nonatomic, readonly, assign) BOOL persist;
 @property (nonatomic, readonly, assign) BOOL requiresNetwork;

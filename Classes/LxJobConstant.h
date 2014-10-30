@@ -23,7 +23,7 @@
 - (NSData*)jobPersistData;
 + (id<LxJobProtocol>)jobRestoreFromPersistData:(NSData*)data;
 
-#pragma mark - Job
+#pragma mark - Job Meta
 - (BOOL)jobFeaturePersistSupport;
 - (BOOL)jobFeatureRequiresNetworkSupport;
 

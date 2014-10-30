@@ -87,13 +87,11 @@
                 [job p_main];
                 job.executing = NO;
                 job.finished = YES;
+                if (wself.delegate) {
+                    [wself.delegate jobExecutor:wself finishJob:job];
+                }
                 @synchronized(wself.lock) {
                     [wself.runningJobs removeObject:job];
-                }
-                if (wself.delegate) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [wself.delegate jobExecutor:wself finishJob:job];
-                    });
                 }
                 [wself touch];
             });

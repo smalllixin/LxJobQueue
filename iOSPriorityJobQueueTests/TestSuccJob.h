@@ -10,6 +10,6 @@
 #import "TestJobTracker.h"
 
 @interface TestSuccJob : TestJobTracker
-
++ (NSString*)regJobName;
 - (id)initWithName:(NSString*)name;
 @end

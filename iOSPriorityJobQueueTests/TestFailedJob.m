@@ -9,6 +9,9 @@
 #import "TestFailedJob.h"
 
 @implementation TestFailedJob
++ (NSString*)regJobName {
+    return @"test_failed";
+}
 
 - (id)initWithName:(NSString*)name {
     if (self = [super init]) {

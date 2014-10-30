@@ -37,8 +37,7 @@ NSInteger const DefaultRetryCount = 20;
         self.requiresNetwork = [entity.requiresNetwork boolValue];
         self.persist = [entity.persist boolValue];
         self.retryCount = [entity.retryCount integerValue];
-        
-//        self.userInfo = ;
+        self.userClsName = entity.userClsName;
     }
     return self;
 }
@@ -114,21 +113,21 @@ NSInteger const DefaultRetryCount = 20;
 #pragma mark NSCoding
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.jobId forKey:@"jobId"];
-    [aCoder encodeObject:self.name forKey:@"name"];
     [aCoder encodeBool:self.persist forKey:@"persist"];
     [aCoder encodeBool:self.requiresNetwork forKey:@"requiresNetwork"];
     [aCoder encodeObject:self.groupId forKey:@"groupId"];
     [aCoder encodeInteger:self.retryCount forKey:@"retryCount"];
+    [aCoder encodeObject:self.userClsName forKey:@"userClsName"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (self = [super init]) {
         self.jobId = [aDecoder decodeObjectForKey:@"jobId"];
-        self.name = [aDecoder decodeObjectForKey:@"name"];
         self.persist = [aDecoder decodeBoolForKey:@"persist"];
         self.requiresNetwork = [aDecoder decodeBoolForKey:@"requiresNetwork"];
         self.groupId = [aDecoder decodeObjectForKey:@"groupId"];
         self.retryCount = [aDecoder decodeIntegerForKey:@"retryCount"];
+        self.userClsName = [aDecoder decodeObjectForKey:@"userClsName"];
     }
     return self;
 }

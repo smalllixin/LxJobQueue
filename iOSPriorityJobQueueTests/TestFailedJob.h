@@ -9,6 +9,9 @@
 #import "LxJob.h"
 #import "TestJobTracker.h"
 @interface TestFailedJob : TestJobTracker
+
++ (NSString*)regJobName;
+
 - (id)initWithName:(NSString*)name;
 
 @property (nonatomic, assign) NSInteger actualRetryCount;

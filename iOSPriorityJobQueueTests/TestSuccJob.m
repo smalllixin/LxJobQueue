@@ -10,6 +10,9 @@
 
 @implementation TestSuccJob
 
++ (NSString*)regJobName {
+    return @"test_succ";
+}
 - (id)initWithName:(NSString*)name {
     if (self = [super init]) {
         self.name = name;

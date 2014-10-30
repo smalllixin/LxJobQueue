@@ -123,7 +123,7 @@
     e.requiresNetwork = @(job.requiresNetwork);
     e.retryCount = @(job.retryCount);
     e.userInfo = [job.userJob jobPersistData];;
-    e.userClsName = NSStringFromClass([job class]);
+    e.userClsName = job.userClsName;
     e.managerName = managerName;
     [self addJobEntity:e];
 }
@@ -179,6 +179,7 @@
     NSArray *job = [_managedObjectContext executeFetchRequest:fetchRequest error:&error];
     if (job.count > 0) {
         [_managedObjectContext deleteObject:[job firstObject]];
+        [self saveContext];
     }
 }
 

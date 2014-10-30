@@ -17,6 +17,14 @@
 
 - (id)initWithName:(NSString*)name;
 
+//this is very import. if userjob change the clsname, we have no information to deserialize userjob to which cls.
+//should reg job before add
+- (void)regJobCls:(Class)cls kindName:(NSString*)clsName;
+
+- (void)restore; //call after reg all possible cls
+
+- (void)discards; //call after reg all possible cls
+
 - (void)addJobInBackground:(id<LxJobProtocol>)job;
 
 - (void)addQueueJob:(id<LxJobProtocol>)job toGroup:(NSString*)groupId;
@@ -32,4 +40,7 @@
 - (void)pause;
 - (void)resume;
 
+- (NSArray*)currentPersistJobEntities;
+
+- (void)enableInMemoryStore;//for debugging
 @end

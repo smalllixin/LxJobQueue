@@ -18,6 +18,7 @@
 @property (nonatomic, copy) NSString *name;
 
 @property (nonatomic, strong) NSMutableDictionary *jobGroup;// <NSString, LxJobExecutor>
+@property (nonatomic, assign) BOOL paused;
 
 @property (nonatomic, strong) dispatch_queue_t syncQueue;
 
@@ -28,6 +29,9 @@
 @property (nonatomic, assign) LxJobQueueCoreData *coreData;
 
 @property (nonatomic, assign) NSInteger dbOpenCount;
+
+@property (nonatomic, strong) NSMutableDictionary *userJobKindClsMap; // <NSString, Class>, used for deserilize userJob
+@property (nonatomic, strong) NSMutableDictionary *userJobClsKindMap; // <Class, NSString>
 
 @end
 
@@ -68,24 +72,36 @@
     _defaultOperationQueue.delegate = self;
     
     self.jobGroup = [[NSMutableDictionary alloc] initWithObjectsAndKeys:_defaultOperationQueue, DefaultJobGroupId,nil];
+
+    self.userJobKindClsMap = [[NSMutableDictionary alloc] init];
+    self.userJobClsKindMap = [[NSMutableDictionary alloc] init];
     
     self.syncQueue = dispatch_queue_create("jobmanage_queue", DISPATCH_QUEUE_SERIAL);
-    
-    [self restore];
+}
+
+- (void)enableInMemoryStore {
+    self.coreData = [LxJobQueueCoreData inMemoryStack];
 }
 
 - (void)restore {
     dispatch_on_main_block(^{
         NSArray *entities = [_coreData allJobEntitiesByManagerName:_name];
-//        for (LxJobEntity *entity in entities) {
-//            LxJob *job = [NSKeyedUnarchiver unarchiveObjectWithData:entity.userInfo];
-//            [job restoreToBeginState];
-//            //todo add to queue
-//        }
+        for (LxJobEntity *entity in entities) {
+            NSString *clsStr = _userJobKindClsMap[entity.userClsName];
+            if (clsStr != nil) {
+                Class userJobCls = NSClassFromString(clsStr);
+                id<LxJobProtocol> userJob = [(id<LxJobProtocol>)userJobCls jobRestoreFromPersistData:entity.userInfo];
+                [self addQueueJob:userJob toGroup:entity.groupId];
+            } else {
+                NSLog(@"restore cannot find registered user class:%@ this job will be ignore", entity.userClsName);
+                continue;
+            }
+        }
     });
-    dispatch_sync(self.syncQueue, ^{
-        
-    });
+}
+
+- (void)discards {
+    [_coreData removeAllJobs];
 }
 
 #pragma mark - Public
@@ -96,6 +112,14 @@
             [q cancelAllJobs];
         }
     });
+}
+
+- (void)regJobCls:(Class)cls kindName:(NSString*)clsName {
+    if (clsName == nil) {
+        clsName = NSStringFromClass(cls);
+    }
+    _userJobKindClsMap[clsName] = NSStringFromClass(cls);
+    _userJobClsKindMap[NSStringFromClass(cls)] = clsName;
 }
 
 - (void)addJobInBackground:(id<LxJobProtocol>)job {
@@ -109,6 +133,13 @@
         job.retryCount = [userJob jobFeatureRetryCount];
     }
     
+    NSString *cls = NSStringFromClass([userJob class]);
+    if (_userJobClsKindMap[cls] == nil) {
+        _userJobClsKindMap[cls] = cls;
+        _userJobKindClsMap[cls] = cls;
+    }
+    job.userClsName = _userJobClsKindMap[cls];
+
     job.userJob = userJob;
     if (job.persist) {
         dispatch_on_main_block(^{
@@ -124,6 +155,11 @@
             q = [LxJobExecutor newSerialJobExecutor];
             q.delegate = self;
             _jobGroup[groupId] = q;
+            @synchronized(self.lock) {
+                if (_paused) {
+                    [q pause];
+                }
+            }
         }
         [q addJobToQueue:job];
     });
@@ -164,17 +200,29 @@
 
 #pragma mark LxJobExecutorDelegate
 - (void)jobExecutor:(LxJobExecutor*)executor finishJob:(LxJob*)job {
-    [_coreData removeJobEntityById:job.jobId];
+//    dispatch_on_main_block(^{
+    NSLog(@"job:%@",job);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [_coreData removeJobEntityById:job.jobId];
+    });
+    
+//    });
 }
 
 - (void)jobExecutor:(LxJobExecutor*)executor cancelJob:(LxJob*)job {
-    [_coreData removeJobEntityById:job.jobId];
+    dispatch_on_main_block(^{
+        [_coreData removeJobEntityById:job.jobId];
+    });
 }
 
 #pragma mark - Persistence
 
 - (void)pause {
+    @synchronized(self.lock) {
+        _paused = YES;
+    }
     dispatch_sync(self.syncQueue, ^{
+        
         for (NSString *groupId in _jobGroup) {
             LxJobExecutor *q = self.jobGroup[groupId];
             if (q) {
@@ -184,16 +232,10 @@
     });
 }
 
-- (void)pauseJobsInGroup:(NSString*)groupId {
-    dispatch_async(self.syncQueue, ^{
-        LxJobExecutor *q = self.jobGroup[groupId];
-        if (q) {
-            [q pause];
-        }
-    });
-}
-
 - (void)resume {
+    @synchronized(self.lock) {
+        _paused = NO;
+    }
     dispatch_sync(self.syncQueue, ^{
         for (NSString *groupId in _jobGroup) {
             LxJobExecutor *q = self.jobGroup[groupId];
@@ -204,8 +246,11 @@
     });
 }
 
+- (NSArray*)currentPersistJobEntities {
+    return [_coreData allJobEntities];
+}
+
 #pragma mark - Dealloc
 - (void)dealloc {
-    [self waitUtilAllJobFinished];
 }
 @end
