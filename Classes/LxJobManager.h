@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LxJobConstant.h"
 #import "LxJob.h"
 
 @interface LxJobManager : NSObject
@@ -14,6 +15,8 @@
 @property (nonatomic, copy, readonly) NSString *name;
 
 + (LxJobManager*)sharedManager;
+
+#pragma mark - Initialize
 
 - (id)initWithName:(NSString*)name;
 
@@ -24,6 +27,8 @@
 - (void)restore; //call after reg all possible cls
 
 - (void)discards; //call after reg all possible cls
+
+#pragma mark - Job Management
 
 - (void)addJobInBackground:(id<LxJobProtocol>)job;
 
@@ -38,9 +43,14 @@
 - (NSInteger)jobCount;
 
 - (void)pause;
+
 - (void)resume;
+
+
+#pragma mark - For Test
 
 - (NSArray*)currentPersistJobEntities;
 
 - (void)enableInMemoryStore;//for debugging
+
 @end

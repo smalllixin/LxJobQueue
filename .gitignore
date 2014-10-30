@@ -2,3 +2,6 @@ iOSPriorityJobQueue.xcodeproj/xcuserdata/
 iOSPriorityJobQueue.xcodeproj/project.xcworkspace/xcuserdata/
 iOSPriorityJobQueue.xcodeproj/project.xcworkspace/xcshareddata/
 .DS_Store
+Podfile.lock
+Pods/
+iOSPriorityJobQueue.xcworkspace/
