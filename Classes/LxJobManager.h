@@ -28,6 +28,8 @@
 
 - (void)discards; //call after reg all possible cls
 
+- (void)regNetworkTestHost:(NSString*)host; //usually this should be your server's domain
+
 #pragma mark - Job Management
 
 - (void)addJobInBackground:(id<LxJobProtocol>)job;

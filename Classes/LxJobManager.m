@@ -12,6 +12,7 @@
 #import "LxJobConstant.h"
 #import "LxJobQueueCoreData.h"
 #import "LxJobEntity.h"
+#import <Reachability/Reachability.h>
 
 @interface LxJobManager()<LxJobExecutorDelegate>
 
@@ -33,6 +34,9 @@
 @property (nonatomic, strong) NSMutableDictionary *userJobKindClsMap; // <NSString, Class>, used for deserilize userJob
 @property (nonatomic, strong) NSMutableDictionary *userJobClsKindMap; // <Class, NSString>
 
+@property (nonatomic, strong) Reachability* reach;
+
+@property (nonatomic, assign) BOOL isReachable;
 @end
 
 @implementation LxJobManager
@@ -77,6 +81,8 @@
     self.userJobClsKindMap = [[NSMutableDictionary alloc] init];
     
     self.syncQueue = dispatch_queue_create("jobmanage_queue", DISPATCH_QUEUE_SERIAL);
+    
+    [self regNetworkTestHost:@"www.github.com"];//sorry, I'm live in china without google. I want to use google here :(
 }
 
 - (void)enableInMemoryStore {
@@ -102,6 +108,29 @@
 
 - (void)discards {
     [_coreData removeAllJobs];
+}
+
+- (void)regNetworkTestHost:(NSString*)host {
+    if (self.reach) {
+        [self.reach stopNotifier];
+        self.reach = nil;
+    }
+    
+    Reachability* reach = [Reachability reachabilityWithHostname:host];
+    
+    __weak typeof(self) wself = self;
+    reach.reachableBlock = ^(Reachability*reach)
+    {
+        wself.isReachable = YES;
+    };
+    
+    reach.unreachableBlock = ^(Reachability*reach)
+    {
+        wself.isReachable = NO;
+    };
+    
+    [reach startNotifier];
+    self.reach = reach;
 }
 
 #pragma mark - Public
