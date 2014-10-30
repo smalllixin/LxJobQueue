@@ -20,6 +20,7 @@ extern NSString *const LxJobEntityName;
 @property (nonatomic, retain) NSNumber * retryCount;
 @property (nonatomic, retain) NSString * groupId;
 @property (nonatomic, retain) NSData * userInfo;
+@property (nonatomic, retain) NSString * userClsName;
 @property (nonatomic, retain) NSDate * createTime;
 
 - (id)initWithContext:(NSManagedObjectContext*)context;

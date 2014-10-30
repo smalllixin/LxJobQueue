@@ -76,7 +76,7 @@ NSInteger const DefaultRetryCount = 20;
             err = [self jobRun];
         }
         @catch (NSException *exception) {
-            err = [NSError errorWithDomain:@"lxtap.com" code:-1 userInfo:@{@"exception":exception}];
+            err = [NSError errorWithDomain:@"github.com/smalllixin" code:-1 userInfo:@{@"exception":exception}];
             NSAssert(err == nil, @"Hey guys you should see where this exception triggered");
         }
         @finally {

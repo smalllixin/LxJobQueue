@@ -19,6 +19,7 @@ NSString *const LxJobEntityName = @"LxJobEntity";
 @dynamic retryCount;
 @dynamic groupId;
 @dynamic userInfo;
+@dynamic userClsName;
 @dynamic createTime;
 
 - (id)initWithContext:(NSManagedObjectContext*)context {

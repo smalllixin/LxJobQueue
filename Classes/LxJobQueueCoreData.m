@@ -123,6 +123,7 @@
     e.requiresNetwork = @(job.requiresNetwork);
     e.retryCount = @(job.retryCount);
     e.userInfo = [job.userJob jobPersistData];;
+    e.userClsName = NSStringFromClass([job class]);
     e.managerName = managerName;
     [self addJobEntity:e];
 }

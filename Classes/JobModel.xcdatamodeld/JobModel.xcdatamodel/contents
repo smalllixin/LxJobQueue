@@ -8,9 +8,10 @@
         <attribute name="persist" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="requiresNetwork" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="retryCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="userClsName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="userInfo" optional="YES" attributeType="Binary" syncable="YES"/>
     </entity>
     <elements>
-        <element name="LxJobEntity" positionX="-63" positionY="-18" width="128" height="165"/>
+        <element name="LxJobEntity" positionX="-63" positionY="-18" width="128" height="180"/>
     </elements>
 </model>

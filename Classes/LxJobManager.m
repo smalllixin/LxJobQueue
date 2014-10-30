@@ -76,7 +76,7 @@
 
 - (void)restore {
     dispatch_on_main_block(^{
-//        NSArray *entities = [_coreData allJobEntitiesByManagerName:_name];
+        NSArray *entities = [_coreData allJobEntitiesByManagerName:_name];
 //        for (LxJobEntity *entity in entities) {
 //            LxJob *job = [NSKeyedUnarchiver unarchiveObjectWithData:entity.userInfo];
 //            [job restoreToBeginState];
