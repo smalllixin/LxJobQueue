@@ -26,3 +26,9 @@ Role inside job manager
 JobManager: accept & persist job.
 Executor: Execute
 
+
+## TODO
+1. network detect
+2. add example project
+3. cocoapods file create
+4. release first version
