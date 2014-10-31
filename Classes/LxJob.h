@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LxPriorityQueue.h"
-#import "LxJobConstant.h"
+#import "LxJobProtocol.h"
 
 extern NSString *const DefaultJobGroupId;
 

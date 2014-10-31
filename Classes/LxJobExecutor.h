@@ -7,6 +7,7 @@
 //
 
 #import "LxJob.h"
+#import "LxJobProtocol.h"
 
 typedef enum : NSUInteger {
     kJobExecutorModeSerial,
@@ -43,6 +44,7 @@ typedef enum : NSUInteger {
 - (NSMutableArray*)waitingJobs;
 
 @property (nonatomic, weak) id<LxJobExecutorDelegate> delegate;
+@property (nonatomic, weak) id<LxJobNetworkStatusProvider> networkStatusProvider;
 @property (nonatomic, assign, readonly) JobExecutorMode mode;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) void(^queueEmptyEvent)();

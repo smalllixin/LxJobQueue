@@ -7,7 +7,7 @@
 //
 
 #import "LxJobExecutor.h"
-#import "LxJobConstant.h"
+#import "LxJobProtocol.h"
 
 @interface LxJobExecutor()
 

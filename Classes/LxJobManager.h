@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LxJobConstant.h"
+#import "LxJobProtocol.h"
 #import "LxJob.h"
 
 @interface LxJobManager : NSObject
@@ -28,8 +28,6 @@
 
 - (void)discards; //call after reg all possible cls
 
-- (void)regNetworkTestHost:(NSString*)host; //usually this should be your server's domain
-
 #pragma mark - Job Management
 
 - (void)addJobInBackground:(id<LxJobProtocol>)job;
@@ -48,6 +46,8 @@
 
 - (void)resume;
 
+//you could customize provider else job manage will use a default one
+@property (nonatomic, strong) id<LxJobNetworkStatusProvider> networkStatusProvider;
 
 #pragma mark - For Test
 
