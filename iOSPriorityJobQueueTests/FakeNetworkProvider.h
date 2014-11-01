@@ -1,5 +1,5 @@
 //
-//  LxDefaultNetworkStatusProvider.h
+//  FakeNetworkProvider.h
 //  iOSPriorityJobQueue
 //
 //  Created by lixin on 11/1/14.
@@ -9,8 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "LxJobProtocol.h"
 
-@interface LxDefaultNetworkStatusProvider : NSObject<LxJobNetworkStatusProvider>
+@interface FakeNetworkProvider : NSObject<LxJobNetworkStatusProvider>
 
-+ (instancetype)provider;
+- (void)makeNetworkInavailable;
+- (void)makeNetworkAvailable;
 
 @end

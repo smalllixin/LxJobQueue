@@ -45,5 +45,5 @@ extern NSString *const DefaultJobGroupId;
 
 
 //do not call this your self
-- (void)p_main;
+- (BOOL)p_main;
 @end

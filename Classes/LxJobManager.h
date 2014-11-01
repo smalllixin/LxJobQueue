@@ -21,7 +21,7 @@
 - (id)initWithName:(NSString*)name;
 
 //this is very import. if userjob change the clsname, we have no information to deserialize userjob to which cls.
-//should reg job before add
+//should reg job before add and keep name stable when rename the class
 - (void)regJobCls:(Class)cls kindName:(NSString*)clsName;
 
 - (void)restore; //call after reg all possible cls

@@ -20,6 +20,7 @@
 @property (nonatomic, strong) NSMutableArray *runningJobs;
 
 @property (nonatomic, assign) BOOL paused;
+@property (nonatomic, assign) BOOL networkCausePaused;
 
 @property (nonatomic, strong) NSObject *lock;
 @end
@@ -59,6 +60,21 @@
     _pendingJobs = [[NSMutableArray alloc] init];
     _runningJobs = [[NSMutableArray alloc] init];
     _paused = NO;
+    _networkCausePaused = NO;
+}
+
+- (void)setNetworkStatusProvider:(id<LxJobNetworkStatusProvider>)networkStatusProvider {
+    _networkStatusProvider = networkStatusProvider;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkStatusChanged:)  name:[networkStatusProvider networkReachableChangedNotificationName] object:networkStatusProvider];
+}
+
+- (void)networkStatusChanged:(NSNotification*)notification {
+    NSLog(@"##############notification###########");
+    BOOL reachable = [notification.userInfo[@"Reachable"] boolValue];
+    if (reachable) {
+        [self networkCauseResume];
+        [self touch];
+    }
 }
 
 - (void)addJobToQueue:(LxJob *)job {
@@ -73,26 +89,78 @@
 
 - (void)touch {
     @synchronized(_lock) {
-        if (_paused) {
+        if (_paused || _networkCausePaused) {
             return;
         }
         if (_pendingJobs.count > 0 && _runningJobs.count < _maxConcurrentCount) {
+            __weak typeof(self) wself = self;
+            
             LxJob *job = [_pendingJobs objectAtIndex:0];
+            if (job.requiresNetwork && ![_networkStatusProvider isNetworkAvailable]) {
+                //require network but network is not available
+                if (_mode == kJobExecutorModeSerial) {
+                    //hold job queue util network works.
+                    [self networkCausePause];
+                    return;
+                } else { //concurrentMode executor
+                    
+                    if (_pendingJobs.count > 1) {
+                        //Check if whether all of remained jobs are requireNetwork
+                        //This could prevent the
+                        int noNetworkRequireJobIdx = -1;
+                        for (int i = 0; i < _pendingJobs.count; i ++) {
+                            LxJob *j = _pendingJobs[i];
+                            if (!j.requiresNetwork) {
+                                noNetworkRequireJobIdx = i;
+                                break;
+                            }
+                        }
+                        
+                        if (noNetworkRequireJobIdx >= 0) {
+                            //let no network required job to head
+                            LxJob *noNetworkRequireJob = [_pendingJobs objectAtIndex:noNetworkRequireJobIdx];
+                            [_pendingJobs removeObjectAtIndex:noNetworkRequireJobIdx];
+                            [_pendingJobs removeObjectAtIndex:0];
+                            [_pendingJobs addObject:job];
+                            [_pendingJobs insertObject:noNetworkRequireJob atIndex:0];
+                            dispatch_async(_queue, ^{
+                                [wself touch];
+                            });
+                        } else {
+                            //every job in queue require network
+                            [self networkCausePause];
+                        }
+                        return;
+                    } else {
+                        //hold on queue wait network notifier
+                        [self networkCausePause];
+                        return;
+                    }
+                }
+            }
             [_runningJobs addObject:job];
             [_pendingJobs removeObjectAtIndex:0];
             
-            __weak typeof(self) wself = self;
             dispatch_async(_queue, ^{
                 job.executing = YES;
-                [job p_main];
+                BOOL finished = [job p_main];
                 job.executing = NO;
-                job.finished = YES;
-                if (wself.delegate) {
-                    [wself.delegate jobExecutor:wself finishJob:job];
+                if (finished) {
+                    job.finished = YES;
+                    if (wself.delegate) {
+                        [wself.delegate jobExecutor:wself finishJob:job];
+                    }
+                    @synchronized(wself.lock) {
+                        [wself.runningJobs removeObject:job];
+                    }
+                } else {
+                    job.finished = NO;
+                    @synchronized(wself.lock) {
+                        [wself.runningJobs removeObject:job];
+                        [_pendingJobs insertObject:job atIndex:0];
+                    }
                 }
-                @synchronized(wself.lock) {
-                    [wself.runningJobs removeObject:job];
-                }
+                
                 [wself touch];
             });
         } else if (_pendingJobs.count == 0 && _runningJobs.count == 0) {
@@ -112,6 +180,18 @@
         [self.pendingJobs removeAllObjects];
     }
     return jobs;
+}
+
+- (void)networkCausePause {
+    @synchronized(_lock) {
+        _networkCausePaused = YES;
+    }
+}
+
+- (void)networkCauseResume {
+    @synchronized(_lock) {
+        _networkCausePaused = NO;
+    }
 }
 
 - (void)pause {
@@ -202,6 +282,7 @@
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 

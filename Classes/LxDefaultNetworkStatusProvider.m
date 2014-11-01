@@ -29,6 +29,25 @@
 - (id)init {
     if (self = [super init]) {
         self.reach = [Reachability reachabilityForInternetConnection];
+        
+        __weak typeof(self) wself = self;
+        // Set the blocks
+        self.reach.reachableBlock = ^(Reachability*reach)
+        {
+            // keep in mind this is called on a background thread
+            // and if you are updating the UI it needs to happen
+            // on the main thread, like this:
+            dispatch_on_main_block(^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:[wself networkReachableChangedNotificationName] object:wself userInfo:@{@"Reachable":@(NO)}];
+            });
+        };
+        
+        self.reach.unreachableBlock = ^(Reachability*reach)
+        {
+            dispatch_on_main_block(^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:[wself networkReachableChangedNotificationName] object:wself userInfo:@{@"Reachable":@(NO)}];
+            });
+        };
     }
     return self;
 }
@@ -39,6 +58,10 @@
     } else {
         return NO;
     }
+}
+
+- (NSString*)networkReachableChangedNotificationName {
+    return @"networkReachableChangedNotificationName";
 }
 
 @end

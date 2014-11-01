@@ -30,6 +30,7 @@
 		A30371DD19F89643007A875D /* LxPriorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371DA19F89643007A875D /* LxPriorityQueue.m */; };
 		A30371E119F896B2007A875D /* PriorityQueueTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371DE19F896B2007A875D /* PriorityQueueTest.m */; };
 		A3BC74741A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC74731A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m */; };
+		A3BC74771A04C4C7003A8918 /* FakeNetworkProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC74761A04C4C7003A8918 /* FakeNetworkProvider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,6 +83,8 @@
 		A30371DE19F896B2007A875D /* PriorityQueueTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PriorityQueueTest.m; sourceTree = "<group>"; };
 		A3BC74721A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxDefaultNetworkStatusProvider.h; sourceTree = "<group>"; };
 		A3BC74731A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxDefaultNetworkStatusProvider.m; sourceTree = "<group>"; };
+		A3BC74751A04C4C7003A8918 /* FakeNetworkProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeNetworkProvider.h; sourceTree = "<group>"; };
+		A3BC74761A04C4C7003A8918 /* FakeNetworkProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeNetworkProvider.m; sourceTree = "<group>"; };
 		A3F3330019FFED0300B04217 /* LxJobProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LxJobProtocol.h; sourceTree = "<group>"; };
 		EF494BFC93982599D5661D92 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F4C8ACC5A847F090AF29E334 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -182,6 +185,8 @@
 				82B91FB319FE479E004F4B05 /* TestFailedJob.m */,
 				82B91FB819FE482D004F4B05 /* TestJobTracker.h */,
 				82B91FB919FE482D004F4B05 /* TestJobTracker.m */,
+				A3BC74751A04C4C7003A8918 /* FakeNetworkProvider.h */,
+				A3BC74761A04C4C7003A8918 /* FakeNetworkProvider.m */,
 				A30371C819F89624007A875D /* Supporting Files */,
 			);
 			path = iOSPriorityJobQueueTests;
@@ -202,6 +207,7 @@
 				A30371D619F89643007A875D /* LxJob.m */,
 				A30371D719F89643007A875D /* LxJobManager.h */,
 				A30371D819F89643007A875D /* LxJobManager.m */,
+				A3F3330019FFED0300B04217 /* LxJobProtocol.h */,
 				A3BC74721A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.h */,
 				A3BC74731A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m */,
 				82B91FBF19FF3658004F4B05 /* LxJobExecutor.h */,
@@ -213,7 +219,6 @@
 				82B91FCB1A00BACC004F4B05 /* LxJobEntity.m */,
 				82B91FCD1A00BB58004F4B05 /* LxJobQueueCoreData.h */,
 				82B91FCE1A00BB58004F4B05 /* LxJobQueueCoreData.m */,
-				A3F3330019FFED0300B04217 /* LxJobProtocol.h */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -376,6 +381,7 @@
 				82B91FC319FF7122004F4B05 /* JobExecutorTest.m in Sources */,
 				82B91FB719FE47B0004F4B05 /* TestSuccJob.m in Sources */,
 				A30371CB19F89624007A875D /* iOSPriorityJobQueueTests.m in Sources */,
+				A3BC74771A04C4C7003A8918 /* FakeNetworkProvider.m in Sources */,
 				82B91FBA19FE482D004F4B05 /* TestJobTracker.m in Sources */,
 				82B91FB419FE479E004F4B05 /* TestFailedJob.m in Sources */,
 				A30371E119F896B2007A875D /* PriorityQueueTest.m in Sources */,

@@ -44,7 +44,7 @@
 }
 
 - (BOOL)jobFeatureRequiresNetworkSupport {
-    return NO;
+    return YES;
 }
 
 - (NSInteger)jobFeatureRetryCount {

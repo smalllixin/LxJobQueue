@@ -37,6 +37,7 @@
 
 @required
 - (BOOL)isNetworkAvailable;
+- (NSString*)networkReachableChangedNotificationName;//userInfo[@"Reachable"] = @(YES) or @(NO) is implicit dependence.
 
 @end
 

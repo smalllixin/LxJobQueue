@@ -71,6 +71,8 @@
     _defaultOperationQueue = [LxJobExecutor newConcurrentJobExecutor:2];
     _defaultOperationQueue.name = @"DefaultOperationQueue";
     _defaultOperationQueue.delegate = self;
+    self.networkStatusProvider = [LxDefaultNetworkStatusProvider provider];
+    _defaultOperationQueue.networkStatusProvider = self.networkStatusProvider;
     
     self.jobGroup = [[NSMutableDictionary alloc] initWithObjectsAndKeys:_defaultOperationQueue, DefaultJobGroupId,nil];
 
@@ -79,7 +81,7 @@
     
     self.syncQueue = dispatch_queue_create("jobmanage_queue", DISPATCH_QUEUE_SERIAL);
     
-    self.networkStatusProvider = [LxDefaultNetworkStatusProvider provider];
+    
 }
 
 - (void)enableInMemoryStore {
@@ -157,6 +159,7 @@
         if (q == nil) {
             q = [LxJobExecutor newSerialJobExecutor];
             q.delegate = self;
+            q.networkStatusProvider = _networkStatusProvider;
             _jobGroup[groupId] = q;
             @synchronized(self.lock) {
                 if (_paused) {

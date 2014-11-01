@@ -17,6 +17,8 @@ NSInteger const DefaultRetryCount = 20;
 @property (nonatomic, assign) BOOL persist;
 @property (nonatomic, assign) BOOL requiresNetwork;
 @property (nonatomic, strong) NSError *jobError;
+
+@property (nonatomic, assign) int attemptCount;
 @end
 
 @implementation LxJob
@@ -27,6 +29,7 @@ NSInteger const DefaultRetryCount = 20;
         self.requiresNetwork = NO;
         self.persist = NO;
         self.retryCount = DefaultRetryCount;
+        self.attemptCount = 0;
     }
     return self;
 }
@@ -67,32 +70,58 @@ NSInteger const DefaultRetryCount = 20;
     [self jobCancelled];
 }
 
-- (void)p_main {
-    int attemptCount = 0;
-    while (true) {
-        NSError *err;
-        @try {
-            err = [self jobRun];
-        }
-        @catch (NSException *exception) {
-            err = [NSError errorWithDomain:@"github.com/smalllixin" code:-1 userInfo:@{@"exception":exception}];
-            NSAssert(err == nil, @"Hey guys you should see where this exception triggered");
-        }
-        @finally {
-            if (err != nil) {
-                self.jobError = err;
-                if ([self jobShouldReRunWithError:err] && attemptCount < self.retryCount) {
-                    attemptCount ++;
-                } else {
-                    [self cancelJob];
-                    return;
-                }
+//return the value whether this job should finish
+- (BOOL)p_main {
+    NSError *err;
+    @try {
+        err = [self jobRun];
+    }
+    @catch (NSException *exception) {
+        err = [NSError errorWithDomain:@"github.com/smalllixin" code:-1 userInfo:@{@"exception":exception}];
+        NSAssert(err == nil, @"Hey guys you should see where this exception triggered");
+    }
+    @finally {
+        if (err != nil) {
+            self.jobError = err;
+            if (_attemptCount < self.retryCount && [self jobShouldReRunWithError:err]) {
+                _attemptCount ++;
+                return NO;
             } else {
-                break;
+                [self cancelJob];
+                return YES;
             }
+        } else {
+            return YES;
         }
     }
 }
+
+//- (BOOL)p_main {
+//    int attemptCount = 0;
+//    while (true) {
+//        NSError *err;
+//        @try {
+//            err = [self jobRun];
+//        }
+//        @catch (NSException *exception) {
+//            err = [NSError errorWithDomain:@"github.com/smalllixin" code:-1 userInfo:@{@"exception":exception}];
+//            NSAssert(err == nil, @"Hey guys you should see where this exception triggered");
+//        }
+//        @finally {
+//            if (err != nil) {
+//                self.jobError = err;
+//                if ([self jobShouldReRunWithError:err] && attemptCount < self.retryCount) {
+//                    attemptCount ++;
+//                } else {
+//                    [self cancelJob];
+//                    return;
+//                }
+//            } else {
+//                break;
+//            }
+//        }
+//    }
+//}
 
 #pragma mark - Job Proxy
 - (void)jobAdded {

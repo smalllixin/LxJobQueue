@@ -13,11 +13,13 @@
 #import "TestSuccJob.h"
 #import "TestFailedJob.h"
 #import "LxJobEntity.h"
+#import "FakeNetworkProvider.h"
 
 #define IGNORE_TEST ;
 
 @interface iOSPriorityJobQueueTests : XCTestCase
 @property (nonatomic, strong) LxJobManager *manager;
+@property (nonatomic, strong) FakeNetworkProvider *networkProvider;
 @end
 
 @implementation iOSPriorityJobQueueTests
@@ -29,6 +31,9 @@
     [self.manager enableInMemoryStore];
     [self.manager regJobCls:[TestSuccJob class] kindName:[TestSuccJob regJobName]];
     [self.manager regJobCls:[TestFailedJob class] kindName:[TestFailedJob regJobName]];
+    self.networkProvider = [[FakeNetworkProvider alloc] init];
+    [self.networkProvider makeNetworkAvailable];
+    self.manager.networkStatusProvider = self.networkProvider;
 }
 
 - (void)tearDown {
@@ -47,7 +52,7 @@
 - (void)testJobCreateAndDefault {
     IGNORE_TEST
     TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"testJobCreateAndDefault"];
-    XCTAssert([job jobFeatureRequiresNetworkSupport] == NO);
+    XCTAssert([job jobFeatureRequiresNetworkSupport] == YES);
     XCTAssert([job jobFeaturePersistSupport] == YES);
     XCTAssertEqual(job.jobAddedCalled, NO);
     XCTAssertEqual(job.jobRunCalled, NO);
@@ -78,15 +83,23 @@
 
 - (void)testJobRetry {
     IGNORE_TEST
+    [self.manager pause];
+    TestSuccJob *succJob = [[TestSuccJob alloc] initWithName:@"testJobRetry succJob"];
+    [self.manager addJobInBackground:succJob];
+    
     TestFailedJob *job = [[TestFailedJob alloc] initWithName:@"Sad! I am failure"];
     job.retryCount = 10;
     [self.manager addJobInBackground:job];
+    
+    [self.manager resume];
     [NSThread sleepForTimeInterval:0.01];
     XCTAssertEqual(job.jobAddedCalled, YES);
     XCTAssertEqual(job.jobRunCalled, YES);
     [self.manager waitUtilAllJobFinished];
     XCTAssertEqual([self.manager jobCount], 0);
-    XCTAssertEqual(job.retryCount, 10);
+    XCTAssertEqual(job.actualRetryCount, 10);
+    
+    XCTAssertEqual(succJob.jobRunCalled, YES);
 }
 
 - (void)testCancelJob {
@@ -171,6 +184,42 @@
     });
     
     [self waitForExpectationsWithTimeout:2.1f handler:^(NSError *error) {
+        if(error)
+        {
+            NSLog(@"error is: %@", [error localizedDescription]);
+        }
+    }];
+}
+
+- (void)testNetworkStatusInGroup {
+    IGNORE_TEST
+    [self.manager pause];
+    
+    TestSuccJob *job1 = [[TestSuccJob alloc] initWithName:@"testNetworkStatus1"];
+    TestSuccJob *job2 = [[TestSuccJob alloc] initWithName:@"testNetworkStatus2"];
+    [self.manager addQueueJob:job1 toGroup:@"network"];
+    [self.manager addQueueJob:job2 toGroup:@"network"];
+    
+    [self.networkProvider makeNetworkInavailable];
+    [self.manager resume];
+    
+    XCTestExpectation *expectation = [self expectationWithDescription:@"Testing NetworkStatus Works!"];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.02 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        XCTAssertEqual([self.manager jobCount], 2);
+        XCTAssertEqual(job1.jobRunCalled, NO);
+        XCTAssertEqual(job2.jobRunCalled, NO);
+        [self.networkProvider makeNetworkAvailable];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            XCTAssertEqual([self.manager jobCount], 0);
+            XCTAssertEqual(job1.jobRunCalled, YES);
+            XCTAssertEqual(job2.jobRunCalled, YES);
+            [expectation fulfill];
+        });
+    });
+    
+    [self waitForExpectationsWithTimeout:30 handler:^(NSError *error) {
         if(error)
         {
             NSLog(@"error is: %@", [error localizedDescription]);
