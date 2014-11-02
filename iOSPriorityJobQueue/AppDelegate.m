@@ -7,6 +7,10 @@
 //
 
 #import "AppDelegate.h"
+#import <MagicalRecord/MagicalRecord+Setup.h>
+#import "ExampleDataManager.h"
+#import "LxJobManager.h"
+#import "HeartJob.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +21,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:@"iOSPriorityJobQueue"];
+    [[ExampleDataManager sharedManager] setupExampleData];
+    
+    [[LxJobManager sharedManager] regJobCls:[HeartJob class] kindName:@"HeartJob"];
     return YES;
 }
 

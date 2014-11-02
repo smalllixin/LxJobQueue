@@ -42,7 +42,7 @@
     static LxJobManager *instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[LxJobManager alloc] init];
+        instance = [[LxJobManager alloc] initWithName:@"sharedManager"];
     });
     return instance;
 }
@@ -206,13 +206,9 @@
 
 #pragma mark LxJobExecutorDelegate
 - (void)jobExecutor:(LxJobExecutor*)executor finishJob:(LxJob*)job {
-//    dispatch_on_main_block(^{
-    NSLog(@"job:%@",job);
-    dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_on_main_block(^{
         [_coreData removeJobEntityById:job.jobId];
     });
-    
-//    });
 }
 
 - (void)jobExecutor:(LxJobExecutor*)executor cancelJob:(LxJob*)job {

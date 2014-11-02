@@ -20,7 +20,6 @@
 		A30371AE19F89623007A875D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371AD19F89623007A875D /* main.m */; };
 		A30371B119F89623007A875D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371B019F89623007A875D /* AppDelegate.m */; };
 		A30371B419F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = A30371B219F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld */; };
-		A30371B719F89623007A875D /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371B619F89623007A875D /* ViewController.m */; };
 		A30371BA19F89623007A875D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A30371B819F89623007A875D /* Main.storyboard */; };
 		A30371BC19F89623007A875D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A30371BB19F89623007A875D /* Images.xcassets */; };
 		A30371BF19F89623007A875D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = A30371BD19F89623007A875D /* LaunchScreen.xib */; };
@@ -31,6 +30,11 @@
 		A30371E119F896B2007A875D /* PriorityQueueTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A30371DE19F896B2007A875D /* PriorityQueueTest.m */; };
 		A3BC74741A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC74731A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m */; };
 		A3BC74771A04C4C7003A8918 /* FakeNetworkProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC74761A04C4C7003A8918 /* FakeNetworkProvider.m */; };
+		A3BC747A1A0680A3003A8918 /* ExamplesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC74791A0680A3003A8918 /* ExamplesViewController.m */; };
+		A3BC747D1A068B0E003A8918 /* HeartExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC747C1A068B0E003A8918 /* HeartExampleViewController.m */; };
+		A3BC74801A069180003A8918 /* HeartJob.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC747F1A069180003A8918 /* HeartJob.m */; };
+		A3BC74881A06959D003A8918 /* Story.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC74871A06959D003A8918 /* Story.m */; };
+		A3BC748C1A06977F003A8918 /* ExampleDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A3BC748B1A06977F003A8918 /* ExampleDataManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,8 +70,6 @@
 		A30371AF19F89623007A875D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A30371B019F89623007A875D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		A30371B319F89623007A875D /* iOSPriorityJobQueue.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iOSPriorityJobQueue.xcdatamodel; sourceTree = "<group>"; };
-		A30371B519F89623007A875D /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		A30371B619F89623007A875D /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A30371B919F89623007A875D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		A30371BB19F89623007A875D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		A30371BE19F89623007A875D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -85,6 +87,16 @@
 		A3BC74731A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LxDefaultNetworkStatusProvider.m; sourceTree = "<group>"; };
 		A3BC74751A04C4C7003A8918 /* FakeNetworkProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FakeNetworkProvider.h; sourceTree = "<group>"; };
 		A3BC74761A04C4C7003A8918 /* FakeNetworkProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FakeNetworkProvider.m; sourceTree = "<group>"; };
+		A3BC74781A0680A3003A8918 /* ExamplesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExamplesViewController.h; sourceTree = "<group>"; };
+		A3BC74791A0680A3003A8918 /* ExamplesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExamplesViewController.m; sourceTree = "<group>"; };
+		A3BC747B1A068B0E003A8918 /* HeartExampleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeartExampleViewController.h; sourceTree = "<group>"; };
+		A3BC747C1A068B0E003A8918 /* HeartExampleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeartExampleViewController.m; sourceTree = "<group>"; };
+		A3BC747E1A069180003A8918 /* HeartJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeartJob.h; sourceTree = "<group>"; };
+		A3BC747F1A069180003A8918 /* HeartJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeartJob.m; sourceTree = "<group>"; };
+		A3BC74861A06959D003A8918 /* Story.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Story.h; sourceTree = "<group>"; };
+		A3BC74871A06959D003A8918 /* Story.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Story.m; sourceTree = "<group>"; };
+		A3BC748A1A06977F003A8918 /* ExampleDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleDataManager.h; sourceTree = "<group>"; };
+		A3BC748B1A06977F003A8918 /* ExampleDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleDataManager.m; sourceTree = "<group>"; };
 		A3F3330019FFED0300B04217 /* LxJobProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LxJobProtocol.h; sourceTree = "<group>"; };
 		EF494BFC93982599D5661D92 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F4C8ACC5A847F090AF29E334 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -130,7 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				A30371D419F89643007A875D /* Classes */,
-				A30371AA19F89623007A875D /* iOSPriorityJobQueue */,
+				A30371AA19F89623007A875D /* iOSPriorityJobQueueExample */,
 				A30371C719F89624007A875D /* iOSPriorityJobQueueTests */,
 				A30371A919F89623007A875D /* Products */,
 				5AB95055AEA027489ECF835D /* Pods */,
@@ -147,19 +159,22 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A30371AA19F89623007A875D /* iOSPriorityJobQueue */ = {
+		A30371AA19F89623007A875D /* iOSPriorityJobQueueExample */ = {
 			isa = PBXGroup;
 			children = (
 				A30371AF19F89623007A875D /* AppDelegate.h */,
 				A30371B019F89623007A875D /* AppDelegate.m */,
-				A30371B519F89623007A875D /* ViewController.h */,
-				A30371B619F89623007A875D /* ViewController.m */,
+				A3BC74891A069753003A8918 /* ExampleMockData */,
+				A3BC74781A0680A3003A8918 /* ExamplesViewController.h */,
+				A3BC74791A0680A3003A8918 /* ExamplesViewController.m */,
+				A3BC74811A069184003A8918 /* HeartExample */,
 				A30371B819F89623007A875D /* Main.storyboard */,
 				A30371BB19F89623007A875D /* Images.xcassets */,
 				A30371BD19F89623007A875D /* LaunchScreen.xib */,
-				A30371B219F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld */,
+				A3BC74851A069550003A8918 /* Model */,
 				A30371AB19F89623007A875D /* Supporting Files */,
 			);
+			name = iOSPriorityJobQueueExample;
 			path = iOSPriorityJobQueue;
 			sourceTree = "<group>";
 		};
@@ -221,6 +236,36 @@
 				82B91FCE1A00BB58004F4B05 /* LxJobQueueCoreData.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		A3BC74811A069184003A8918 /* HeartExample */ = {
+			isa = PBXGroup;
+			children = (
+				A3BC747B1A068B0E003A8918 /* HeartExampleViewController.h */,
+				A3BC747C1A068B0E003A8918 /* HeartExampleViewController.m */,
+				A3BC747E1A069180003A8918 /* HeartJob.h */,
+				A3BC747F1A069180003A8918 /* HeartJob.m */,
+			);
+			name = HeartExample;
+			sourceTree = "<group>";
+		};
+		A3BC74851A069550003A8918 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A30371B219F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld */,
+				A3BC74861A06959D003A8918 /* Story.h */,
+				A3BC74871A06959D003A8918 /* Story.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		A3BC74891A069753003A8918 /* ExampleMockData */ = {
+			isa = PBXGroup;
+			children = (
+				A3BC748A1A06977F003A8918 /* ExampleDataManager.h */,
+				A3BC748B1A06977F003A8918 /* ExampleDataManager.m */,
+			);
+			name = ExampleMockData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -358,17 +403,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3BC748C1A06977F003A8918 /* ExampleDataManager.m in Sources */,
 				82B91FC419FF845E004F4B05 /* LxJobExecutor.m in Sources */,
 				A30371B119F89623007A875D /* AppDelegate.m in Sources */,
+				A3BC74801A069180003A8918 /* HeartJob.m in Sources */,
+				A3BC74881A06959D003A8918 /* Story.m in Sources */,
 				A3BC74741A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m in Sources */,
 				A30371DC19F89643007A875D /* LxJobManager.m in Sources */,
 				82B91FC91A00BA59004F4B05 /* JobModel.xcdatamodeld in Sources */,
+				A3BC747A1A0680A3003A8918 /* ExamplesViewController.m in Sources */,
 				82B91FCF1A00BB58004F4B05 /* LxJobQueueCoreData.m in Sources */,
 				82B91FCC1A00BACC004F4B05 /* LxJobEntity.m in Sources */,
 				A30371DB19F89643007A875D /* LxJob.m in Sources */,
+				A3BC747D1A068B0E003A8918 /* HeartExampleViewController.m in Sources */,
 				A30371AE19F89623007A875D /* main.m in Sources */,
 				A30371DD19F89643007A875D /* LxPriorityQueue.m in Sources */,
-				A30371B719F89623007A875D /* ViewController.m in Sources */,
 				A30371B419F89623007A875D /* iOSPriorityJobQueue.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

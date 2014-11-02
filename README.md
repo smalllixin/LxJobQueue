@@ -28,7 +28,11 @@ Executor: Execute
 
 
 ## TODO
-1. network detect
-2. add example project
-3. cocoapods file create
-4. release first version
+1. add example project
+  What's kind of exam?
+  Create something
+2. cocoapods file create
+3. release first version
+
+##future 
+1. chance to merge tasks
