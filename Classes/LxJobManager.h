@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import "LxJobProtocol.h"
-#import "LxJob.h"
+
+@class LxJob;
 
 @interface LxJobManager : NSObject
 
@@ -48,11 +49,5 @@
 
 //you could customize provider else job manage will use a default one
 @property (nonatomic, strong) id<LxJobNetworkStatusProvider> networkStatusProvider;
-
-#pragma mark - For Test
-
-- (NSArray*)currentPersistJobEntities;
-
-- (void)enableInMemoryStore;//for debugging
 
 @end

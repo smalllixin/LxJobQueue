@@ -97,6 +97,8 @@
 		A3BC74871A06959D003A8918 /* Story.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Story.m; sourceTree = "<group>"; };
 		A3BC748A1A06977F003A8918 /* ExampleDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleDataManager.h; sourceTree = "<group>"; };
 		A3BC748B1A06977F003A8918 /* ExampleDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleDataManager.m; sourceTree = "<group>"; };
+		A3BC748D1A0919AD003A8918 /* LxJobManager_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LxJobManager_Private.h; sourceTree = "<group>"; };
+		A3BC748E1A091AF5003A8918 /* LxJob_Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LxJob_Private.h; sourceTree = "<group>"; };
 		A3F3330019FFED0300B04217 /* LxJobProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LxJobProtocol.h; sourceTree = "<group>"; };
 		EF494BFC93982599D5661D92 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F4C8ACC5A847F090AF29E334 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -218,11 +220,13 @@
 		A30371D419F89643007A875D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A3F3330019FFED0300B04217 /* LxJobProtocol.h */,
 				A30371D519F89643007A875D /* LxJob.h */,
 				A30371D619F89643007A875D /* LxJob.m */,
+				A3BC748E1A091AF5003A8918 /* LxJob_Private.h */,
 				A30371D719F89643007A875D /* LxJobManager.h */,
 				A30371D819F89643007A875D /* LxJobManager.m */,
-				A3F3330019FFED0300B04217 /* LxJobProtocol.h */,
+				A3BC748D1A0919AD003A8918 /* LxJobManager_Private.h */,
 				A3BC74721A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.h */,
 				A3BC74731A03EBB8003A8918 /* LxDefaultNetworkStatusProvider.m */,
 				82B91FBF19FF3658004F4B05 /* LxJobExecutor.h */,

@@ -35,15 +35,4 @@ extern NSString *const DefaultJobGroupId;
 - (id)initWithEntity:(LxJobEntity*)entity;
 - (id)initWithGroupId:(NSString*)groupId requiresNetwork:(BOOL)requiresNettwork persist:(BOOL)persist;
 
-- (void)restoreToBeginState;
-
-#pragma mark Proxy
-- (void)jobAdded;
-- (NSError*)jobRun;
-- (BOOL)jobShouldReRunWithError:(NSError*)error;
-- (void)jobCancelled;
-
-
-//do not call this your self
-- (BOOL)p_main;
 @end

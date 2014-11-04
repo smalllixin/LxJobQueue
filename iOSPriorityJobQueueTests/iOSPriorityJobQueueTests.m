@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LxJobManager.h"
+#import "LxJobManager_Private.h"
 
 #import <XCTest/XCTest.h>
 #import "TestSuccJob.h"

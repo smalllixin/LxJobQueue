@@ -7,6 +7,7 @@
 //
 
 #import "LxJobManager.h"
+#import "LxJob_Private.h"
 #import "LxPriorityQueue.h"
 #import "LxJobExecutor.h"
 #import "LxJobProtocol.h"
