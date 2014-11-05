@@ -1,4 +1,4 @@
-iOSPriorityJobQueue
+LxJobQueue
 ===================
 
 iOS version PriorityJobQueue
