@@ -8,6 +8,7 @@
 
 #import "LxJobExecutor.h"
 #import "LxJobProtocol.h"
+#import "LxJob_Private.h"
 
 @interface LxJobExecutor()
 
