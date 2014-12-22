@@ -128,7 +128,7 @@
     _userJobClsKindMap[NSStringFromClass(cls)] = clsName;
 }
 
-- (void)addJobInBackground:(id<LxJobProtocol>)job {
+- (void)addJobToDefaultGroup:(id<LxJobProtocol>)job {
     [self addQueueJob:job toGroup:DefaultJobGroupId];
 }
 

@@ -64,7 +64,7 @@
 - (void)testJobAddToQueue {
     IGNORE_TEST
     TestSuccJob *job = [[TestSuccJob alloc] initWithName:@"testJobAddToQueue"];
-    [self.manager addJobInBackground:job];
+    [self.manager addJobToDefaultGroup:job];
     [self.manager waitUtilAllJobFinished];
     XCTAssertEqual(job.jobAddedCalled, YES);
     XCTAssertEqual(job.jobRunCalled, YES);
@@ -86,11 +86,11 @@
     IGNORE_TEST
     [self.manager pause];
     TestSuccJob *succJob = [[TestSuccJob alloc] initWithName:@"testJobRetry succJob"];
-    [self.manager addJobInBackground:succJob];
+    [self.manager addJobToDefaultGroup:succJob];
     
     TestFailedJob *job = [[TestFailedJob alloc] initWithName:@"Sad! I am failure"];
     job.retryCount = 10;
-    [self.manager addJobInBackground:job];
+    [self.manager addJobToDefaultGroup:job];
     
     [self.manager resume];
     [NSThread sleepForTimeInterval:0.01];
@@ -148,8 +148,8 @@
     TestSuccJob *job2 = [[TestSuccJob alloc] initWithName:@"testPersist2"];
     TestFailedJob *job3 = [[TestFailedJob alloc] initWithName:@"testPersist3"];
     [self.manager pause];
-    [self.manager addJobInBackground:job1];
-    [self.manager addJobInBackground:job2];
+    [self.manager addJobToDefaultGroup:job1];
+    [self.manager addJobToDefaultGroup:job2];
     [self.manager addQueueJob:job3 toGroup:@"group2"];
 
     NSArray *jobEntities = [self.manager currentPersistJobEntities];
@@ -233,7 +233,7 @@
     NSMutableArray *a = [[NSMutableArray alloc] initWithCapacity:jobCount];
     for (int i = 0; i < jobCount; i ++) {
         TestSuccJob *job = [[TestSuccJob alloc] initWithName:[NSString stringWithFormat:@"%@:%d", name, i]];
-        [self.manager addJobInBackground:job];
+        [self.manager addJobToDefaultGroup:job];
         [a addObject:job];
     }
     return a;

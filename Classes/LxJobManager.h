@@ -31,7 +31,7 @@
 
 #pragma mark - Job Management
 
-- (void)addJobInBackground:(id<LxJobProtocol>)job;
+- (void)addJobToDefaultGroup:(id<LxJobProtocol>)job;
 
 - (void)addQueueJob:(id<LxJobProtocol>)job toGroup:(NSString*)groupId;
 

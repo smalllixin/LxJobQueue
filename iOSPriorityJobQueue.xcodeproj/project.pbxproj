@@ -169,11 +169,11 @@
 				A3BC74891A069753003A8918 /* ExampleMockData */,
 				A3BC74781A0680A3003A8918 /* ExamplesViewController.h */,
 				A3BC74791A0680A3003A8918 /* ExamplesViewController.m */,
+				A3BC74851A069550003A8918 /* Model */,
 				A3BC74811A069184003A8918 /* HeartExample */,
 				A30371B819F89623007A875D /* Main.storyboard */,
 				A30371BB19F89623007A875D /* Images.xcassets */,
 				A30371BD19F89623007A875D /* LaunchScreen.xib */,
-				A3BC74851A069550003A8918 /* Model */,
 				A30371AB19F89623007A875D /* Supporting Files */,
 			);
 			name = iOSPriorityJobQueueExample;
