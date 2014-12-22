@@ -212,7 +212,7 @@
         XCTAssertEqual(job2.jobRunCalled, NO);
         [self.networkProvider makeNetworkAvailable];
         
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             XCTAssertEqual([self.manager jobCount], 0);
             XCTAssertEqual(job1.jobRunCalled, YES);
             XCTAssertEqual(job2.jobRunCalled, YES);
