@@ -25,6 +25,7 @@
     [[ExampleDataManager sharedManager] setupExampleData];
     
     [[LxJobManager sharedManager] regJobCls:[HeartJob class] kindName:@"HeartJob"];
+    [[LxJobManager sharedManager] restore];
     return YES;
 }
 
